@@ -3,7 +3,7 @@ import queryString from "query-string"
 const redirectURI =
   process.env.NODE_ENV === "dev"
     ? "http://localhost:9000/signinslack"
-    : "https://festive-ride-32b5bd.netlify.com/signinslack"
+    : "https://festive-ride-32b5bd.netlify.com/.netlify/functions/signinslack"
 export default Vue.extend({
   name: "Signin",
   created() {
