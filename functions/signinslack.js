@@ -4,6 +4,7 @@ const axios = require("axios")
 const queryString = require("query-string")
 const url = "https://slack.com/api/oauth.access"
 exports.handler = ({ queryStringParameters: query, headers, path }, context, callback) => {
+  console.log(process.env)
   const code = query.code
   const appURL = query.state
   const redirectURI = `http://${headers.host}/signinslack`
