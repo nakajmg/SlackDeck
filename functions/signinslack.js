@@ -8,7 +8,7 @@ exports.handler = ({ queryStringParameters: query, headers, path }, context, cal
   const appURL = query.state
   console.log(path, headers)
   const redirectURI =
-    process.env.NODE_ENV === "dev"
+    process.env.NODE_ENV === "local"
       ? `http://${headers.host}/signinslack`
       : "https://festive-ride-32b5bd.netlify.com/.netlify/functions/signinslack"
   console.log(redirectURI)
