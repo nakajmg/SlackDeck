@@ -1,7 +1,6 @@
 import Vue from "vue"
 import Router from "vue-router"
 import Root from "./pages/Root"
-import Signin from "./pages/Signin"
 
 Vue.use(Router)
 
@@ -13,11 +12,6 @@ export default new Router({
       path: "/",
       name: "root",
       component: Root,
-    },
-    {
-      path: "/signin",
-      name: "signin",
-      component: Signin,
     },
     // {
     //   path: "/",

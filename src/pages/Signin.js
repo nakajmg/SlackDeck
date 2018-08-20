@@ -1,28 +1,30 @@
 import Vue from "vue"
 import queryString from "query-string"
-const redirectURI =
-  process.env.NODE_ENV === "local"
-    ? "http://localhost:9000/signinslack"
-    : "https://festive-ride-32b5bd.netlify.com/.netlify/functions/signinslack"
 export default Vue.extend({
   name: "Signin",
+  computed: {
+    redirectURI() {
+      return process.env.NODE_ENV === "local"
+        ? "http://localhost:9000/signinslack"
+        : "https://festive-ride-32b5bd.netlify.com/.netlify/functions/signinslack"
+    },
+  },
   created() {
     const query = queryString.parse(location.search)
     if (query.ok === "true" && query.access_token) {
-      console.log("ok")
       this.$store.commit("setSlackToken", query)
-      this.$router.push({
+      this.$router.replace({
         name: "root",
       })
     }
   },
-  render(h) {
+  render() {
     return (
       <div>
         <a
-          href={`https://slack.com/oauth/authorize?scope=identity.basic&client_id=2320436460.419427842645&redirect_uri=${redirectURI}&state=${
-            location.href
-          }`}
+          href={`https://slack.com/oauth/authorize?scope=identity.basic&client_id=2320436460.419427842645&redirect_uri=${
+            this.redirectURI
+          }&state=${location.href}`}
         >
           <img
             alt="Sign in with Slack"
