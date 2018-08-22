@@ -1,12 +1,10 @@
-const dotenv = require("dotenv").config()
-const env = dotenv.error ? process.env : dotenv.parsed
+require("dotenv").config()
 const axios = require("axios")
 const queryString = require("query-string")
 const url = "https://slack.com/api/oauth.access"
-exports.handler = ({ queryStringParameters: query, headers, path }, context, callback) => {
+exports.handler = ({ queryStringParameters: query, headers }, context, callback) => {
   const code = query.code
   const appURL = query.state
-  console.log(path, headers)
   const redirectURI =
     process.env.NODE_ENV === "local"
       ? `http://${headers.host}/signinslack`
@@ -17,8 +15,8 @@ exports.handler = ({ queryStringParameters: query, headers, path }, context, cal
       .get(url, {
         params: {
           code,
-          client_id: env.SLACK_CLIENT_ID,
-          client_secret: env.SLACK_CLIENT_SECRET,
+          client_id: process.env.SLACK_CLIENT_ID,
+          client_secret: process.env.SLACK_CLIENT_SECRET,
           redirect_uri: redirectURI,
         },
       })
