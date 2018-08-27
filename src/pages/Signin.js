@@ -1,5 +1,6 @@
 import Vue from "vue"
 import queryString from "query-string"
+import types from "../store/types"
 export default Vue.extend({
   name: "Signin",
   computed: {
@@ -11,18 +12,20 @@ export default Vue.extend({
   },
   created() {
     const query = queryString.parse(location.search)
-    if (query.ok === "true" && query.access_token) {
-      this.$store.commit("setSlackToken", query)
-      this.$router.replace({
-        name: "root",
-      })
-    }
+    if (!query.response) return
+    const response = JSON.parse(query.response)
+    if (!response.ok) return
+    // this.$store.commit(types.SET_SLACK_TOKEN, response)
+    this.$store.commit(types.ADD_TEAM, response)
+    this.$router.replace({
+      name: this.$route.name,
+    })
   },
   render() {
     return (
       <div>
         <a
-          href={`https://slack.com/oauth/authorize?scope=identity.basic&client_id=2320436460.419427842645&redirect_uri=${
+          href={`https://slack.com/oauth/authorize?scope=client&client_id=2320436460.419427842645&redirect_uri=${
             this.redirectURI
           }&state=${location.href}`}
         >

@@ -1,6 +1,5 @@
 require("dotenv").config()
 const axios = require("axios")
-const queryString = require("query-string")
 const url = "https://slack.com/api/oauth.access"
 exports.handler = ({ queryStringParameters: query, headers }, context, callback) => {
   const code = query.code
@@ -9,7 +8,6 @@ exports.handler = ({ queryStringParameters: query, headers }, context, callback)
     process.env.NODE_ENV === "local"
       ? `http://${headers.host}/signinslack`
       : "https://festive-ride-32b5bd.netlify.com/.netlify/functions/signinslack"
-  console.log(redirectURI)
   if (code) {
     return axios
       .get(url, {
@@ -26,7 +24,7 @@ exports.handler = ({ queryStringParameters: query, headers }, context, callback)
         return callback(null, {
           statusCode: 302,
           headers: {
-            Location: `${appURL}?${queryString.stringify(json)}`,
+            Location: `${appURL}?response=${JSON.stringify(json)}`,
           },
         })
       })
