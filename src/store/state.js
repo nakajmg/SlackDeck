@@ -1,5 +1,6 @@
 export default {
-  teams: [],
-  users: {},
+  tokens: [],
   channels: [],
+  teams: {},
+  messages: {},
 }

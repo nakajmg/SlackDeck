@@ -8,19 +8,22 @@ import storageKey from "./variables/storageKey"
 import pick from "lodash/pick"
 import locale from "element-ui/lib/locale"
 import lang from "element-ui/lib/locale/lang/ja"
-import { Option, Select } from "element-ui"
+import { Option, Select, Button } from "element-ui"
 locale.use(lang)
 Vue.use(Option)
 Vue.use(Select)
+Vue.use(Button)
 Vue.config.productionTip = false
 const saveToLocalStorage = state => {
-  const keys = ["teams"]
+  const keys = ["tokens", "channels"]
   window.localStorage.setItem(storageKey, JSON.stringify(pick(state, keys)))
 }
 
 store.subscribe((mutation, state) => {
   switch (mutation.type) {
-    case types.ADD_TEAM:
+    case types.ADD_TOKEN:
+      return saveToLocalStorage(state)
+    case types.ADD_CHANNEL:
       return saveToLocalStorage(state)
   }
 })

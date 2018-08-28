@@ -52,13 +52,27 @@ export default token => {
         }
         socket.addEventListener("message", event => {
           if (event.data === '{"type": "hello"}') return
-          if (!isFunction(socket.eventList[event.type])) return
+          const data = JSON.parse(event.data)
+          console.log(event.type, data.type)
+          const handler = data.subtype
+            ? socket.eventList[`${data.type}.${data.subtype}`]
+            : null || socket.eventList[data.type] || socket.eventList[event.type]
+          if (!isFunction(handler)) return
+          if (event.type === "message") {
+            switch (data.type) {
+              case "message":
+                return handler(event)
+              case "reaction_added":
+                return handler(event)
+              case "reaction_removed":
+                return handler(event)
+              default:
+                return
+            }
+          }
           switch (event.type) {
-            case "message":
-              if (JSON.parse(event.data).type !== "message") return
-              return socket.eventList[event.type](event)
             default:
-              return socket.eventList[event.type](event)
+              return handler(event)
           }
         })
         return socket
