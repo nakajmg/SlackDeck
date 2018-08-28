@@ -1,5 +1,5 @@
 import axios from "axios"
-import isFunction from "lodash/isFunction"
+import handleSocket from "./handleSocket"
 const ENTRY_POINT = strings => `https://slack.com/api${strings[0]}`
 
 export default token => {
@@ -13,6 +13,7 @@ export default token => {
       })
       .then(res => res.data)
   }
+
   return {
     team: {
       // https://api.slack.com/methods/team.info
@@ -46,35 +47,7 @@ export default token => {
         const res = await _get(url)
         console.log(res)
         const socket = new WebSocket(res.url)
-        socket.eventList = {}
-        socket.on = (eventName, callback) => {
-          socket.eventList[eventName] = callback
-        }
-        socket.addEventListener("message", event => {
-          if (event.data === '{"type": "hello"}') return
-          const data = JSON.parse(event.data)
-          console.log(event.type, data.type)
-          const handler = data.subtype
-            ? socket.eventList[`${data.type}.${data.subtype}`]
-            : null || socket.eventList[data.type] || socket.eventList[event.type]
-          if (!isFunction(handler)) return
-          if (event.type === "message") {
-            switch (data.type) {
-              case "message":
-                return handler(event)
-              case "reaction_added":
-                return handler(event)
-              case "reaction_removed":
-                return handler(event)
-              default:
-                return
-            }
-          }
-          switch (event.type) {
-            default:
-              return handler(event)
-          }
-        })
+        handleSocket(socket)
         return socket
       },
     },
