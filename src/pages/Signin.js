@@ -15,7 +15,8 @@ export default Vue.extend({
     if (!query.response) return
     const response = JSON.parse(query.response)
     if (!response.ok) return
-    // this.$store.commit(types.SET_SLACK_TOKEN, response)
+    // teamの重複チェック？
+    // tokenの更新の可能性があるから重複チェックしていい感じにする
     this.$store.commit(types.ADD_TOKEN, response)
     this.$router.replace({
       name: this.$route.name,

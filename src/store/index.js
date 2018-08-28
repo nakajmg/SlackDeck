@@ -7,20 +7,21 @@ import map from "lodash/map"
 import cloneDeep from "lodash/cloneDeep"
 import includes from "lodash/includes"
 import indexOf from "lodash/indexOf"
-import deepFreeze from "deep-freeze"
 Vue.use(Vuex)
 export default new Vuex.Store({
   state,
+  modules: {
+    teams: {},
+    messages: {},
+  },
   mutations: {
     [types.RESTORE_FROM_LOCAL_STORAGE](state) {
       const data = window.localStorage.getItem(storageKey)
       if (!data) return
       Object.assign(state, JSON.parse(data))
     },
-    [types.INITIALIZE_STATE](state) {
-      state.channels.forEach(team => {
-        state.messages[team.channelId] = []
-      })
+    [types.INITIALIZE](state) {
+      state.initialized = true
     },
     [types.ADD_TOKEN](state, payload) {
       console.log(payload, state)
@@ -34,11 +35,6 @@ export default new Vuex.Store({
       tokens.splice(index, 1, payload)
       state.tokens = tokens
     },
-    // [types.REMOVE_TEAM](state, { teamId }) {
-    //   const index = indexOf(state.teams, ({ team: { id } }) => id === teamId)
-    //   if (index === -1) return
-    //   state.teams.splice(index, 1)
-    // },
     [types.ADD_CHANNEL](state, { channelId, team_id }) {
       const channelIds = map(state.channels, ({ channelId }) => channelId)
       if (includes(channelIds, channelId)) return
@@ -51,18 +47,6 @@ export default new Vuex.Store({
       )
       if (index === -1) return
       state.channels.splice(index, 1)
-    },
-    [types.SET_TEAM_INFO](state, { access_token, teamInfo, channelsList, usersList }) {
-      state.teams[teamInfo.id] = state.teams[teamInfo.id] || {}
-      Object.assign(
-        state.teams[teamInfo.id],
-        deepFreeze({ access_token, teamInfo, channelsList, usersList }),
-      )
-    },
-    [types.ADD_MESSAGE](state, { channelId, message }) {
-      const messages = cloneDeep(state.messages)
-      messages[channelId].push(message)
-      state.messages = deepFreeze(messages)
     },
   },
   actions: {},

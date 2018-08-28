@@ -2,7 +2,7 @@
   <div>
     <h3>{{channelName}}</h3>
     <div>
-      <div v-for="message in messages" :key="message.client_msg_id">
+      <div v-for="message in messages.messages" :key="message.client_msg_id">
         {{timestamp(message.ts)}}/{{userName(message.user)}}/{{message.text}}
       </div>
     </div>
@@ -21,7 +21,7 @@ export default {
     channelId: String,
     channelName: String,
     usersList: Array,
-    messages: Array,
+    messages: Object,
   },
   methods: {
     userName(userId) {

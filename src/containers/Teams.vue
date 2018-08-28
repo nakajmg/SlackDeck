@@ -25,8 +25,9 @@ export default {
   methods: {
     onMessage(message) {
       const channelId = message.channel
+      // 登録してあるチャンネル以外のmessageは破棄する
       if (!this.messages[channelId]) return
-      this.$store.commit(types.ADD_MESSAGE, {
+      this.$store.commit(`${channelId}/${types.ADD_MESSAGE}`, {
         channelId,
         message,
       })
