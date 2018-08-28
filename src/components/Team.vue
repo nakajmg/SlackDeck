@@ -17,9 +17,11 @@ export default {
       <div>
         <TeamInfo teamInfo={this.teamInfo} />
         <ChannelsList channelsList={this.channelsList} onSelectChannel={this.onSelectChannel} />
-        <button onClick={this.connect}>connect</button>
       </div>
     )
+  },
+  mounted() {
+    return this.connect()
   },
   methods: {
     onSelectChannel({ channelId }) {
@@ -31,6 +33,9 @@ export default {
     async connect() {
       const socket = await api(this.access_token).rtm.connect()
       socket.on("message", event => {
+        this.$emit("messageReceived", JSON.parse(event.data))
+      })
+      socket.on("reaction_added", event => {
         console.log(JSON.parse(event.data))
       })
       socket.on("message.message_changed", event => {

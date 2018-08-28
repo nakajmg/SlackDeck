@@ -6,24 +6,22 @@ export default {
   name: "Channels",
   computed: {
     ...mapState(["channels", "teams", "messages"]),
-    _channels() {
-      return this.channels.map(({ channelId, team_id }) => {
-        const { teamInfo, usersList, channelsList } = this.teams[team_id]
-        const channelName = this.getChannelName({ channelId, channelsList })
-        return {
-          channelName,
-          team_id,
-          channelId,
-          messages: this.messages[channelId],
-        }
-      })
-    },
   },
   render(h) {
     return (
       <div>
-        {this._channels.map(channel => {
-          return h(Channel, { props: channel })
+        {this.channels.map(({ channelId, team_id }) => {
+          const { usersList, channelsList } = this.teams[team_id]
+          const channelName = this.getChannelName({ channelId, channelsList })
+          return h(Channel, {
+            props: {
+              team_id,
+              channelId,
+              channelName,
+              usersList,
+              messages: this.messages[channelId],
+            },
+          })
         })}
       </div>
     )

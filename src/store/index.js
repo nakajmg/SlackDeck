@@ -7,6 +7,7 @@ import map from "lodash/map"
 import cloneDeep from "lodash/cloneDeep"
 import includes from "lodash/includes"
 import indexOf from "lodash/indexOf"
+import deepFreeze from "deep-freeze"
 Vue.use(Vuex)
 export default new Vuex.Store({
   state,
@@ -53,7 +54,15 @@ export default new Vuex.Store({
     },
     [types.SET_TEAM_INFO](state, { access_token, teamInfo, channelsList, usersList }) {
       state.teams[teamInfo.id] = state.teams[teamInfo.id] || {}
-      Object.assign(state.teams[teamInfo.id], { access_token, teamInfo, channelsList, usersList })
+      Object.assign(
+        state.teams[teamInfo.id],
+        deepFreeze({ access_token, teamInfo, channelsList, usersList }),
+      )
+    },
+    [types.ADD_MESSAGE](state, { channelId, message }) {
+      const messages = cloneDeep(state.messages)
+      messages[channelId].push(message)
+      state.messages = deepFreeze(messages)
     },
   },
   actions: {},
