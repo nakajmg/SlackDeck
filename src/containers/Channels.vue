@@ -7,12 +7,12 @@ import types from "../store/types"
 export default {
   name: "Channels",
   computed: {
-    ...mapState(["channels", "teams", "messages"]),
+    ...mapState(["channelsOrder", "teams", "channels"]),
   },
   render(h) {
     return (
       <div class="Channels">
-        {this.channels.map(({ channelId, team_id }) => {
+        {this.channelsOrder.map(({ channelId, team_id }) => {
           const { channelsList, teamInfo, emojiList } = this.teams[team_id]
           const channelName = this.getChannelName({ channelId, channelsList })
 
@@ -23,7 +23,7 @@ export default {
               channelId,
               channelName,
               users: this.$store.getters[`${team_id}/users`],
-              messages: this.messages[channelId],
+              channel: this.channels[channelId],
               emojiList,
             },
             on: {
@@ -40,10 +40,10 @@ export default {
       return channel.name
     },
     removeChannel({ channelId, team_id }) {
-      const index = findIndex(this.channels, channel => {
+      const index = findIndex(this.channelsOrder, channel => {
         return channel.channelId === channelId && channel.team_id === team_id
       })
-      console.log(this.channels)
+      console.log(this.channelsOrder)
       console.log(channelId, team_id)
       console.log(index)
       if (index === -1) return

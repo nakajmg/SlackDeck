@@ -101,7 +101,6 @@ export default {
     convUserName({user, bot_id}) {
       if (bot_id) return user || "Bot"
       const _user = this.users[user] || {}
-      console.log(user, _user.name)
       return _user.name || "unknown"
     },
     messageToHTML(text) {

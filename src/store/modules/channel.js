@@ -9,7 +9,6 @@ export default {
       access_token: "",
       channelId: "",
       messages: [],
-      reactions: [],
     }
   },
   mutations: {

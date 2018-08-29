@@ -1,7 +1,7 @@
 export default {
   tokens: [],
-  channels: [],
+  channelsOrder: [],
   initialized: false,
   // teams: {},
-  // messages: {},
+  // channels: {},
 }

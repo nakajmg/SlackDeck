@@ -10,22 +10,22 @@ import locale from "element-ui/lib/locale"
 import lang from "element-ui/lib/locale/lang/ja"
 import { Option, Select, Button } from "element-ui"
 import teamModule from "./store/modules/team"
-import messageModule from "./store/modules/message"
+import channelModule from "./store/modules/channel"
 locale.use(lang)
 Vue.use(Option)
 Vue.use(Select)
 Vue.use(Button)
 Vue.config.productionTip = false
 const saveToLocalStorage = state => {
-  const keys = ["tokens", "channels"]
+  const keys = ["tokens", "channelsOrder"]
   window.localStorage.setItem(storageKey, JSON.stringify(pick(state, keys)))
 }
 
 const registerTeamModule = team_id => {
   store.registerModule(["teams", team_id], teamModule)
 }
-const registerMessageModule = channelId => {
-  store.registerModule(["messages", channelId], messageModule)
+const registerChannelModule = channelId => {
+  store.registerModule(["channels", channelId], channelModule)
 }
 store.subscribe(async ({ type, payload }, state) => {
   switch (type) {
@@ -40,7 +40,7 @@ store.subscribe(async ({ type, payload }, state) => {
 
     case types.ADD_CHANNEL:
       // 追加したチャンネルをモジュール登録
-      registerMessageModule(payload.channelId)
+      registerChannelModule(payload.channelId)
       await store.dispatch(`${payload.channelId}/${types.INITIALIZE}`, {
         access_token: state.teams[payload.team_id].access_token,
         channelId: payload.channelId,
@@ -60,10 +60,10 @@ store.subscribe(async ({ type, payload }, state) => {
           return store.dispatch(`${team_id}/${types.INITIALIZE}`, { access_token })
         }),
       )
-      // state.channelsがあればmessageモジュールを登録する
+      // state.channelOrderがあればmessageモジュールを登録する
       await Promise.all(
-        state.channels.map(({ channelId, team_id }) => {
-          registerMessageModule(channelId)
+        state.channelsOrder.map(({ channelId, team_id }) => {
+          registerChannelModule(channelId)
           const { access_token } = state.teams[team_id]
           return store.dispatch(`${channelId}/${types.INITIALIZE}`, { access_token, channelId })
         }),

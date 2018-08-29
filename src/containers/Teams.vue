@@ -5,7 +5,7 @@ import map from "lodash/map"
 export default {
   name: "Teams",
   computed: {
-    ...mapState(["teams", "messages"]),
+    ...mapState(["teams"]),
   },
   render(h) {
     return (

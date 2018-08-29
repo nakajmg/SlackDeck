@@ -22,7 +22,7 @@
     </div>
     
     <div class="Channel_Messages">
-      <Message v-for="message in messages.messages" :key="message.ts" v-bind="message" :users="users" :emojiList="emojiList" :messages="messages.messages" v-if="!message.parent_user_id"/>
+      <Message v-for="message in channel.messages" :key="message.ts" v-bind="message" :users="users" :emojiList="emojiList" :messages="channel.messages" v-if="!message.parent_user_id"/>
     </div>
   </div>
 </template>
@@ -36,7 +36,7 @@ export default {
     channelId: String,
     channelName: String,
     users: Object,
-    messages: Object,
+    channel: Object,
     emojiList: Object,
   },
   methods: {

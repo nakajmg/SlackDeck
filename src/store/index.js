@@ -15,7 +15,7 @@ export default new Vuex.Store({
   state,
   modules: {
     teams: {},
-    messages: {},
+    channels: {},
   },
   mutations: {
     [types.RESTORE_FROM_LOCAL_STORAGE](state) {
@@ -39,17 +39,17 @@ export default new Vuex.Store({
       state.tokens = tokens
     },
     [types.ADD_CHANNEL](state, { channelId, team_id }) {
-      const channelIds = map(state.channels, ({ channelId }) => channelId)
+      const channelIds = map(state.channelsOrder, ({ channelId }) => channelId)
       if (includes(channelIds, channelId)) return
-      state.channels.push(deepFreeze({ channelId, team_id }))
+      state.channelsOrder.push(deepFreeze({ channelId, team_id }))
     },
     [types.REMOVE_CHANNEL](state, { channelId, team_id }) {
       const index = findIndex(
-        state.channels,
+        state.channelsOrder,
         channel => channel.channelId === channelId && channel.team_id === team_id,
       )
       if (index === -1) return
-      state.channels.splice(index, 1)
+      state.channelsOrder.splice(index, 1)
     },
   },
   actions: {
@@ -61,7 +61,7 @@ export default new Vuex.Store({
           sockets.set(access_token, socket)
           socket.on("message", event => {
             const message = JSON.parse(event.data)
-            if (!state.messages[message.channel]) return
+            if (!state.channels[message.channel]) return
             console.log("messageReceived", message)
             commit(`${message.channel}/${types.ADD_MESSAGE}`, {
               message,
