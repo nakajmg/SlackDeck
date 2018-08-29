@@ -5,19 +5,15 @@
         <img :src="teamInfo.icon.image_102">
       </span>
       <span class="Channel_ChannelName">
-        <div>
-          <span class="Channel_Sharp">
-            #
-          </span>
-          <span>
-            {{channelName}}
-          </span>
-        </div>
-      </span>
-      <span class="Channel_Remove">
-        <span @click="onClickRemove">
-          <i class="el-icon-error"></i>
+        <span class="Channel_Sharp">
+          #
         </span>
+        <span>
+          {{channelName}}
+        </span>
+      </span>
+      <span class="Channel_Remove" @click="onClickRemove">
+        <span class="el-icon-error"></span>
       </span>
     </div>
     

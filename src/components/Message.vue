@@ -15,10 +15,31 @@
       <div class="Message_Text" v-html="parsedText">
       </div>
       <div v-html="reaction"></div>
-      <div v-if="replies">
-        <div v-for="reply in replyMessages" :key="reply.ts">
-          <span>{{convUserName(reply)}}</span>
-          <div v-html="messageToHTML(reply.text)"></div>
+      <div
+        class="Message_Replies"
+        v-if="replies.length !== 0"
+      >
+        <div class="Message_Reply"
+          v-for="reply in replyMessages"
+          :key="reply.ts"
+        >
+          <div class="Message_UserIcon">
+            <img :src="convUserIcon(reply.user)" class="Message_Icon">
+          </div>
+          <div class="Message_Content">
+            <div class="Message_Header">
+              <span class="Message_UserName">
+                {{convUserName(reply)}}
+              </span>
+              <span class="Message_Timestamp">
+                {{convTimestamp(reply.ts)}}
+              </span>
+            </div>
+            <div 
+              class="Message_Text"
+              v-html="messageToHTML(reply.text)">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -58,7 +79,7 @@ export default {
   },
   computed: {
     userName() {
-      return this.convUserName({user: this.user, bot_id: this.bot_id })
+      return this.convUserName({ user: this.user, bot_id: this.bot_id })
     },
     timestamp() {
       return this.convTimestamp(this.ts)
@@ -81,11 +102,11 @@ export default {
       return `<div class="Message_Reactions">${reactions.join("")}</div>`
     },
     replyMessages() {
-      const repliesTs = this.replies.map(({ts, user}) => ts)
-      return this.messages.filter(({ts}) => {
+      const repliesTs = this.replies.map(({ ts }) => ts)
+      return this.messages.filter(({ ts }) => {
         return includes(repliesTs, ts)
       })
-    }
+    },
   },
   methods: {
     convTimestamp(ts) {
@@ -98,7 +119,7 @@ export default {
       const icon = user.profile.image_72
       return icon
     },
-    convUserName({user, bot_id}) {
+    convUserName({ user, bot_id }) {
       if (bot_id) return user || "Bot"
       const _user = this.users[user] || {}
       return _user.name || "unknown"
@@ -124,8 +145,7 @@ export default {
           return this._replaceCustomEmoji(name)
         },
         (code, name) => {
-          console.log(code, name)
-          return `<span data-emoji>${code}</span>`
+          return `<span data-emoji="${name}">${code}</span>`
         },
       )
     },
@@ -163,7 +183,7 @@ export default {
   width: 100%;
   &_Text {
     white-space: pre-wrap;
-    line-height: 1.25;
+    line-height: 1.35;
     img[data-custom-emoji] {
       display: inline-flex;
       height: 1.4em;
@@ -180,8 +200,8 @@ export default {
     align-items: bottom;
   }
   &_UserIcon {
-    min-width: 36px;
-    height: 36px;
+    min-width: 2.25em;
+    height: 2.25em;
     border-radius: 3px;
     margin-right: 0.5em;
   }
@@ -245,6 +265,17 @@ export default {
       height: auto;
       display: block;
     }
+  }
+  // &_Replies {}
+  &_Reply {
+    box-sizing: border-box;
+    text-align: left;
+    word-break: break-all;
+    display: flex;
+    padding: 5px;
+    border-bottom: 1px solid #f0f0f0;
+    width: 100%;
+    font-size: 0.85em;
   }
 }
 </style>
