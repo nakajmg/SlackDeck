@@ -36,7 +36,7 @@ export default {
         api(access_token).team.info(),
         api(access_token).users.list(),
       ])
-      commit(types.SET_TEAM_INFO, {
+      return commit(types.SET_TEAM_INFO, {
         access_token,
         channelsList,
         teamInfo,

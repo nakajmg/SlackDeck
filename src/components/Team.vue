@@ -20,26 +20,11 @@ export default {
       </div>
     )
   },
-  mounted() {
-    return this.connect()
-  },
   methods: {
     onSelectChannel({ channelId }) {
       this.$store.commit(types.ADD_CHANNEL, {
         channelId,
         team_id: this.team_id,
-      })
-    },
-    async connect() {
-      const socket = await api(this.access_token).rtm.connect()
-      socket.on("message", event => {
-        this.$emit("messageReceived", JSON.parse(event.data))
-      })
-      socket.on("reaction_added", event => {
-        console.log(JSON.parse(event.data))
-      })
-      socket.on("message.message_changed", event => {
-        console.log(JSON.parse(event.data))
       })
     },
   },

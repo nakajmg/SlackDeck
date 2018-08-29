@@ -35,12 +35,13 @@ store.subscribe(async ({ type, payload }, state) => {
       await store.dispatch(`${payload.team_id}/${types.INITIALIZE}`, {
         access_token: payload.access_token,
       })
+      await store.dispatch(types.CONNECT_RTM, payload)
       return saveToLocalStorage(state)
 
     case types.ADD_CHANNEL:
       // 追加したチャンネルをモジュール登録
       registerMessageModule(payload.channelId)
-      store.dispatch(`${payload.channelId}/${types.INITIALIZE}`, {
+      await store.dispatch(`${payload.channelId}/${types.INITIALIZE}`, {
         access_token: state.teams[payload.team_id].access_token,
         channelId: payload.channelId,
       })
@@ -61,6 +62,11 @@ store.subscribe(async ({ type, payload }, state) => {
           registerMessageModule(channelId)
           const { access_token } = state.teams[team_id]
           return store.dispatch(`${channelId}/${types.INITIALIZE}`, { access_token, channelId })
+        }),
+      )
+      await Promise.all(
+        state.tokens.map(({ team_id, access_token }) => {
+          return store.dispatch(types.CONNECT_RTM, { team_id, access_token })
         }),
       )
       // 初期化完了後にAppがコンポーネント表示
