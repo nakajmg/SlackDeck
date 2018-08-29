@@ -1,7 +1,6 @@
-import Vue from "vue"
 import queryString from "query-string"
 import types from "../store/types"
-export default Vue.extend({
+export default {
   name: "Signin",
   computed: {
     redirectURI() {
@@ -34,6 +33,7 @@ export default Vue.extend({
             alt="Sign in with Slack"
             height="40"
             width="172"
+            style="display: block;"
             src="https://platform.slack-edge.com/img/sign_in_with_slack.png"
             srcset="https://platform.slack-edge.com/img/sign_in_with_slack.png 1x, https://platform.slack-edge.com/img/sign_in_with_slack@2x.png 2x"
           />
@@ -41,4 +41,4 @@ export default Vue.extend({
       </div>
     )
   },
-})
+}

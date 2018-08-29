@@ -7,7 +7,7 @@ import storageKey from "../variables/storageKey"
 import map from "lodash/map"
 import cloneDeep from "lodash/cloneDeep"
 import includes from "lodash/includes"
-import indexOf from "lodash/indexOf"
+import findIndex from "lodash/findIndex"
 import deepFreeze from "deep-freeze"
 Vue.use(Vuex)
 const sockets = new Map()
@@ -34,7 +34,7 @@ export default new Vuex.Store({
         return state.tokens.push(deepFreeze(payload))
       }
       const tokens = cloneDeep(state.tokens)
-      const index = indexOf(tokens, ({ team_id }) => team_id === payload.team_id)
+      const index = findIndex(tokens, ({ team_id }) => team_id === payload.team_id)
       tokens.splice(index, 1, payload)
       state.tokens = tokens
     },
@@ -44,7 +44,7 @@ export default new Vuex.Store({
       state.channels.push(deepFreeze({ channelId, team_id }))
     },
     [types.REMOVE_CHANNEL](state, { channelId, team_id }) {
-      const index = indexOf(
+      const index = findIndex(
         state.channels,
         channel => channel.channelId === channelId && channel.team_id === team_id,
       )

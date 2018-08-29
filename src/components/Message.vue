@@ -28,6 +28,7 @@ export default {
   name: "Message",
   props: {
     users: Object,
+    emojiList: Object,
     type: String,
     ts: String,
     user: String,
@@ -64,24 +65,60 @@ export default {
       // const regexMention = /<@([A-Za-z0-9]+)>/g
       // const regexImageLink = /<(https?:\/\/.*\.(png|jpg|gif))>/g
       let text = this.text
-      text = emojify(text)
-      text = text.replace(/\<(https?:\/\/[^\s]+)\|(.*?)\>/g, (url, $1, $2) => {
-        return `<a href="${$1}" target="_blank" rel="noopener">${$2}</a>`
-      })
-      text = text.replace(/\<(https?:\/\/[^\s]+)\>/g, (url, $1) => {
-        return `<a href="${$1}" target="_blank" rel="noopener">${$1}</a>`
-      })
-      text = text.replace(/\&gt;(.*)$/g, (match, $1) => {
-        return `<blockquote class="Message_Blockquote">${$1}</blockquote>`
-      })
+      text = this._replaceUserName(text)
+      text = this._replaceEmoji(text)
+      text = this._replaceLink(text)
+      text = this._replaceBlockquote(text)
       return text || ""
     },
     reaction() {
-      const reactions = this.reactions.map(({ count, name, users }) => {
-        const emoji = emojify(`:${name}:`, name => name)
-        return `<span class="Message_Reaction"><span>${emoji}</span><span>${count}</span></span>`
+      const reactions = this.reactions.map(({ count, name }) => {
+        const emoji = emojify(`:${name}:`, name => {
+          return this._replaceCustomEmoji(name)
+        })
+        return `<span class="Message_Reaction"><span class="Message_ReactionIcon">${emoji}</span><span>${count}</span></span>`
       })
       return `<div class="Message_Reactions">${reactions.join("")}</div>`
+    },
+  },
+  methods: {
+    _replaceUserName(text) {
+      text = text.replace(/<@(U.*)>/g, (match, $1) => {
+        const user = this.users[$1]
+        return user.name
+      })
+      return text
+    },
+    _replaceEmoji(text) {
+      return emojify(
+        text,
+        name => {
+          return this._replaceCustomEmoji(name)
+        },
+        (code, name) => {
+          console.log(code, name)
+          return `<span data-emoji>${code}</span>`
+        },
+      )
+    },
+    _replaceLink(text) {
+      text = text.replace(/<(https?:\/\/[^\s]+)\|(.*?)>/g, (url, $1, $2) => {
+        return `<a href="${$1}" target="_blank" rel="noopener">${$2}</a>`
+      })
+      text = text.replace(/<(https?:\/\/[^\s]+)>/g, (url, $1) => {
+        return `<a href="${$1}" target="_blank" rel="noopener">${$1}</a>`
+      })
+      return text
+    },
+    _replaceBlockquote(text) {
+      text = text.replace(/&gt;(.*)$/g, (match, $1) => {
+        return `<blockquote class="Message_Blockquote">${$1}</blockquote>`
+      })
+      return text
+    },
+    _replaceCustomEmoji(name) {
+      const emoji = this.emojiList[name]
+      return emoji ? `<img data-custom-emoji="name" src="${emoji}">` : name
     },
   },
 }
@@ -89,14 +126,30 @@ export default {
 
 <style lang="scss">
 .Message {
+  box-sizing: border-box;
   text-align: left;
   word-break: break-all;
   display: flex;
-  padding: 3px;
+  padding: 5px;
+  border-bottom: 1px solid #f0f0f0;
+  width: 100%;
+  &_Text {
+    white-space: pre-wrap;
+    line-height: 1.25;
+    img[data-custom-emoji] {
+      display: inline-flex;
+      height: 1.4em;
+      width: auto;
+      vertical-align: top;
+    }
+    [data-emoji] {
+      font-size: 1.4em;
+    }
+  }
   &_Header {
     font-size: 0.8em;
     display: flex;
-    align-items: center;
+    align-items: bottom;
   }
   &_UserIcon {
     min-width: 36px;
@@ -114,7 +167,14 @@ export default {
     font-weight: 600;
     margin-right: 1em;
   }
-  // &_Timestamp {}
+  &_Timestamp {
+    margin-left: auto;
+    font-size: 0.85em;
+    opacity: 0.8;
+  }
+  &_Content {
+    flex-grow: 1;
+  }
   &_Blockquote {
     position: relative;
     margin: 0.25rem 0;
@@ -131,7 +191,10 @@ export default {
       content: "";
     }
   }
-  // &_Reactions {}
+  &_Reactions {
+    display: flex;
+    align-items: center;
+  }
   &_Reaction {
     align-items: center;
     background: #fff;
@@ -145,6 +208,15 @@ export default {
     padding: 2px 3px;
     background-color: rgba(5, 118, 185, 0.05);
     border-color: rgba(5, 118, 185, 0.3);
+  }
+  &_ReactionIcon {
+    width: 16px;
+    margin-right: 3px;
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
   }
 }
 </style>

@@ -59,5 +59,12 @@ export default token => {
         return socket
       },
     },
+    emoji: {
+      async list() {
+        const url = ENTRY_POINT`/emoji.list`
+        const res = await _get(url)
+        return res.emoji
+      },
+    },
   }
 }

@@ -47,6 +47,10 @@ store.subscribe(async ({ type, payload }, state) => {
       })
       return saveToLocalStorage(state)
 
+    case types.REMOVE_CHANNEL:
+      store.unregisterModule(["messages", payload.channelId])
+      return saveToLocalStorage(state)
+
     case types.RESTORE_FROM_LOCAL_STORAGE:
       // localStorageからの復元後
       // tokensがあればteamモジュールに登録したあとteamのinfoを取りに行く

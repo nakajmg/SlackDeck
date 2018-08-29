@@ -2,7 +2,6 @@
 import { mapState } from "vuex"
 import Team from "../components/Team.vue"
 import map from "lodash/map"
-import types from "../store/types"
 export default {
   name: "Teams",
   computed: {
@@ -10,7 +9,7 @@ export default {
   },
   render(h) {
     return (
-      <div>
+      <div class="Teams">
         {map(this.teams, (team, team_id) =>
           h(Team, {
             props: { ...team, team_id },
@@ -21,3 +20,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.Teams {
+  display: flex;
+}
+</style>

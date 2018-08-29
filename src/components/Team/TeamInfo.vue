@@ -23,10 +23,12 @@ export default {
   &_Icon {
     height: 32px;
     width: auto;
+    display: block;
+    border-radius: 3px;
   }
   &_Name {
-    margin-left: 0.5em;
-    font-size: 24px;
+    margin-left: 5px;
+    font-size: 18px;
   }
 }
 </style>

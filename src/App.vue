@@ -4,7 +4,6 @@ export default {
   name: "App",
   created() {
     this.$store.commit(types.RESTORE_FROM_LOCAL_STORAGE)
-    // this.$store.commit(types.INITIALIZE_STATE)
   },
   render() {
     return (
@@ -15,3 +14,12 @@ export default {
   },
 }
 </script>
+
+<style>
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+</style>
