@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ElSelect v-model="selectedChannel">
+    <ElSelect v-model="selectedChannel" filterable>
       <ElOption v-for="channel in channelsList" :key="channel.id" :value="channel.id" :label="channel.name"/>
     </ElSelect>
     <ElButton type="primary" icon="el-icon-plus" @click="select" :disabled="!selectedChannel"></ElButton>

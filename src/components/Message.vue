@@ -14,6 +14,7 @@
       </div>
       <div class="Message_Text" v-html="parsedText">
       </div>
+      <div v-html="reaction"></div>
     </div>
   </div>
 </template>
@@ -32,6 +33,10 @@ export default {
     user: String,
     text: String,
     attachments: Array,
+    reactions: {
+      type: Array,
+      default: () => [],
+    },
     bot_id: {
       type: String,
       default: "",
@@ -70,6 +75,13 @@ export default {
         return `<blockquote class="Message_Blockquote">${$1}</blockquote>`
       })
       return text || ""
+    },
+    reaction() {
+      const reactions = this.reactions.map(({ count, name, users }) => {
+        const emoji = emojify(`:${name}:`, name => name)
+        return `<span class="Message_Reaction"><span>${emoji}</span><span>${count}</span></span>`
+      })
+      return `<div class="Message_Reactions">${reactions.join("")}</div>`
     },
   },
 }
@@ -118,6 +130,21 @@ export default {
       background: #e3e4e6;
       content: "";
     }
+  }
+  // &_Reactions {}
+  &_Reaction {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 5px;
+    display: inline-flex;
+    font-size: 11px;
+    line-height: 16px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    padding: 2px 3px;
+    background-color: rgba(5, 118, 185, 0.05);
+    border-color: rgba(5, 118, 185, 0.3);
   }
 }
 </style>
