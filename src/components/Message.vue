@@ -15,6 +15,12 @@
       <div class="Message_Text" v-html="parsedText">
       </div>
       <div v-html="reaction"></div>
+      <div v-if="replies">
+        <div v-for="reply in replyMessages" :key="reply.ts">
+          <span>{{convUserName(reply)}}</span>
+          <div v-html="messageToHTML(reply.text)"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -22,6 +28,7 @@
 <script>
 import first from "lodash/first"
 import toNumber from "lodash/toNumber"
+import includes from "lodash/includes"
 import DateTime from "luxon/src/datetime"
 import { emojify } from "node-emoji"
 export default {
@@ -33,8 +40,13 @@ export default {
     ts: String,
     user: String,
     text: String,
+    thread_ts: String,
     attachments: Array,
     reactions: {
+      type: Array,
+      default: () => [],
+    },
+    replies: {
       type: Array,
       default: () => [],
     },
@@ -42,34 +54,22 @@ export default {
       type: String,
       default: "",
     },
+    messages: Array,
   },
   computed: {
     userName() {
-      if (this.bot_id !== "") {
-        return this.user || "Bot"
-      }
-      const user = this.users[this.user] || {}
-      return user.name || "unknown"
+      return this.convUserName({user: this.user, bot_id: this.bot_id })
     },
     timestamp() {
-      const time = toNumber(first(this.ts.split("."))) * 1000
-      return DateTime.fromMillis(time).toFormat("MM/dd HH:mm:ss")
+      return this.convTimestamp(this.ts)
     },
     userIcon() {
-      const user = this.users[this.user]
-      if (!user) return "https://a.slack-edge.com/0180/img/slackbot_72.png"
-      const icon = user.profile.image_72
-      return icon
+      return this.convUserIcon(this.user)
     },
     parsedText() {
       // const regexMention = /<@([A-Za-z0-9]+)>/g
       // const regexImageLink = /<(https?:\/\/.*\.(png|jpg|gif))>/g
-      let text = this.text
-      text = this._replaceUserName(text)
-      text = this._replaceEmoji(text)
-      text = this._replaceLink(text)
-      text = this._replaceBlockquote(text)
-      return text || ""
+      return this.messageToHTML(this.text)
     },
     reaction() {
       const reactions = this.reactions.map(({ count, name }) => {
@@ -80,8 +80,37 @@ export default {
       })
       return `<div class="Message_Reactions">${reactions.join("")}</div>`
     },
+    replyMessages() {
+      const repliesTs = this.replies.map(({ts, user}) => ts)
+      return this.messages.filter(({ts}) => {
+        return includes(repliesTs, ts)
+      })
+    }
   },
   methods: {
+    convTimestamp(ts) {
+      const time = toNumber(first(ts.split("."))) * 1000
+      return DateTime.fromMillis(time).toFormat("MM/dd HH:mm:ss")
+    },
+    convUserIcon(userId) {
+      const user = this.users[userId]
+      if (!user) return "https://a.slack-edge.com/0180/img/slackbot_72.png"
+      const icon = user.profile.image_72
+      return icon
+    },
+    convUserName({user, bot_id}) {
+      if (bot_id) return user || "Bot"
+      const _user = this.users[user] || {}
+      console.log(user, _user.name)
+      return _user.name || "unknown"
+    },
+    messageToHTML(text) {
+      text = this._replaceUserName(text)
+      text = this._replaceEmoji(text)
+      text = this._replaceLink(text)
+      text = this._replaceBlockquote(text)
+      return text || ""
+    },
     _replaceUserName(text) {
       text = text.replace(/<@(U.*)>/g, (match, $1) => {
         const user = this.users[$1]

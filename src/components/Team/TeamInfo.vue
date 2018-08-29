@@ -29,6 +29,7 @@ export default {
   &_Name {
     margin-left: 5px;
     font-size: 18px;
+    display: none;
   }
 }
 </style>
