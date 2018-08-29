@@ -3,7 +3,7 @@
     <ElSelect v-model="selectedChannel">
       <ElOption v-for="channel in channelsList" :key="channel.id" :value="channel.id" :label="channel.name"/>
     </ElSelect>
-    <ElButton type="primary" icon="el-icon-plus" @click="select"></ElButton>
+    <ElButton type="primary" icon="el-icon-plus" @click="select" :disabled="!selectedChannel"></ElButton>
   </div>
 </template>
 
@@ -21,6 +21,7 @@ export default {
   methods: {
     select() {
       const channelId = this.selectedChannel
+      if (channelId === "") return
       this.$emit("selectChannel", { channelId })
     },
   },

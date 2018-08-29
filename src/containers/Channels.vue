@@ -9,16 +9,17 @@ export default {
   },
   render(h) {
     return (
-      <div>
+      <div class="Channels">
         {this.channels.map(({ channelId, team_id }) => {
           const { usersList, channelsList } = this.teams[team_id]
           const channelName = this.getChannelName({ channelId, channelsList })
           return h(Channel, {
+            class: "Channels_Channel",
             props: {
               team_id,
               channelId,
               channelName,
-              usersList,
+              users: this.$store.getters[`${team_id}/users`],
               messages: this.messages[channelId],
             },
           })
@@ -34,3 +35,13 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.Channels {
+  display: flex;
+  &_Channel {
+    display: block;
+    min-width: 300px;
+    flex-grow: 1;
+  }
+}
+</style>

@@ -40,6 +40,10 @@ store.subscribe(async ({ type, payload }, state) => {
     case types.ADD_CHANNEL:
       // 追加したチャンネルをモジュール登録
       registerMessageModule(payload.channelId)
+      store.dispatch(`${payload.channelId}/${types.INITIALIZE}`, {
+        access_token: state.teams[payload.team_id].access_token,
+        channelId: payload.channelId,
+      })
       return saveToLocalStorage(state)
 
     case types.RESTORE_FROM_LOCAL_STORAGE:
@@ -52,9 +56,13 @@ store.subscribe(async ({ type, payload }, state) => {
         }),
       )
       // state.channelsがあればmessageモジュールを登録する
-      state.channels.forEach(({ channelId }) => {
-        registerMessageModule(channelId)
-      })
+      await Promise.all(
+        state.channels.map(({ channelId, team_id }) => {
+          registerMessageModule(channelId)
+          const { access_token } = state.teams[team_id]
+          return store.dispatch(`${channelId}/${types.INITIALIZE}`, { access_token, channelId })
+        }),
+      )
       // 初期化完了後にAppがコンポーネント表示
       store.commit(types.INITIALIZE)
       return

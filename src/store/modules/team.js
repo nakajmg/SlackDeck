@@ -1,6 +1,8 @@
 import deepFreeze from "deep-freeze"
 import types from "../types"
 import api from "../../modules/api"
+import zipObject from "lodash/zipObject"
+import map from "lodash/map"
 export default {
   namespaced: true,
   state() {
@@ -10,6 +12,14 @@ export default {
       channelsList: [],
       usersList: [],
     }
+  },
+  getters: {
+    users(state) {
+      return zipObject(map(state.usersList, ({ id }) => id), state.usersList)
+    },
+    channels(state) {
+      return zipObject(map(state.channelsList, ({ id }) => id), state.channelsList)
+    },
   },
   mutations: {
     [types.SET_TEAM_INFO](state, { access_token, teamInfo, channelsList, usersList }) {

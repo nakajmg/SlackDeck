@@ -2,12 +2,14 @@ import Vue from "vue"
 import Vuex from "vuex"
 import state from "./state"
 import types from "./types"
+import api from "../modules/api"
 import storageKey from "../variables/storageKey"
 import map from "lodash/map"
 import cloneDeep from "lodash/cloneDeep"
 import includes from "lodash/includes"
 import indexOf from "lodash/indexOf"
 Vue.use(Vuex)
+const sockets = new Map()
 export default new Vuex.Store({
   state,
   modules: {
@@ -49,5 +51,11 @@ export default new Vuex.Store({
       state.channels.splice(index, 1)
     },
   },
-  actions: {},
+  actions: {
+    async [types.CONNECT_RTM]({ commit }, { access_token }) {
+      const socket = await api(this.access_token).rtm.connect()
+      sockets.set(access_token, socket)
+      console.log(commit)
+    },
+  },
 })
