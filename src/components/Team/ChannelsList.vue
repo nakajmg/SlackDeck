@@ -1,9 +1,8 @@
 <template>
   <div class="ChannelsList">
-    <ElSelect v-model="selectedChannel" filterable>
+    <ElSelect v-model="selectedChannel" filterable @change="select">
       <ElOption v-for="channel in channelsList" :key="channel.id" :value="channel.id" :label="channel.name"/>
     </ElSelect>
-    <ElButton class="ChannelsList_AddButton" type="primary" icon="el-icon-plus" @click="select" :disabled="!selectedChannel"></ElButton>
   </div>
 </template>
 
@@ -19,10 +18,9 @@ export default {
     }
   },
   methods: {
-    select() {
-      const channelId = this.selectedChannel
-      if (channelId === "") return
+    select(channelId) {
       this.$emit("selectChannel", { channelId })
+      this.selectedChannel = ""
     },
   },
 }

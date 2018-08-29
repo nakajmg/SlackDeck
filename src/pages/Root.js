@@ -10,7 +10,7 @@ export default {
   render() {
     return (
       <div style="padding: 5px;">
-        <header style="display: flex; align-items: flex-end; margin-bottom: 5px;">
+        <header style="display: flex; align-items: center; margin-bottom: 5px;">
           {this.initialized ? <Teams /> : null} <Signin />
         </header>
         <main>{this.initialized ? [<Channels />] : null}</main>

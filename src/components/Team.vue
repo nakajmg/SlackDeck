@@ -33,7 +33,7 @@ export default {
 <style lang="scss">
 .Team {
   margin-right: 5px;
-  border: 1px solid #f0f0f0;
+  // border: 1px solid #f0f0f0;
   padding: 5px;
   display: flex;
   align-items: center;
