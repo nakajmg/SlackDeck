@@ -50,6 +50,10 @@ store.subscribe(async ({ type, payload }, state) => {
     case types.REMOVE_CHANNEL:
       store.unregisterModule(["channels", payload.channelId])
       return saveToLocalStorage(state)
+    case types.MOVE_RIGHT_CHANNEL:
+      return saveToLocalStorage(state)
+    case types.MOVE_LEFT_CHANNEL:
+      return saveToLocalStorage(state)
 
     case types.RESTORE_FROM_LOCAL_STORAGE:
       // localStorageからの復元後

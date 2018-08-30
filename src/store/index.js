@@ -51,6 +51,26 @@ export default new Vuex.Store({
       if (index === -1) return
       state.channelsOrder.splice(index, 1)
     },
+    [types.MOVE_LEFT_CHANNEL](state, { channelId, team_id }) {
+      const index = findIndex(
+        state.channelsOrder,
+        channel => channel.channelId === channelId && channel.team_id === team_id,
+      )
+      if (index === -1 || index === 0) return
+      const target = state.channelsOrder[index]
+      const prev = state.channelsOrder[index - 1]
+      state.channelsOrder.splice(index - 1, 2, target, prev)
+    },
+    [types.MOVE_RIGHT_CHANNEL](state, { channelId, team_id }) {
+      const index = findIndex(
+        state.channelsOrder,
+        channel => channel.channelId === channelId && channel.team_id === team_id,
+      )
+      if (index === -1 || index === state.channelsOrder.length - 1) return
+      const target = state.channelsOrder[index]
+      const prev = state.channelsOrder[index + 1]
+      state.channelsOrder.splice(index, 2, prev, target)
+    },
   },
   actions: {
     [types.CONNECT_RTM]({ state, commit }, { access_token }) {

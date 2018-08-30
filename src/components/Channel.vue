@@ -12,10 +12,31 @@
           {{channelName}}
         </span>
       </span>
-      <span class="Channel_Remove" @click="onClickRemove">
-        <span class="el-icon-close"></span>
+      <span class="Channel_Menu"
+        @click="onClickMenu"
+      >
+        <span class="el-icon-menu"></span>
       </span>
     </div>
+    <transition name="slide-fade">
+      <div class="Channel_Controls" v-if="menuOpened">
+        <button class="Channel_MoveLeft"
+          @click="onClickMoveLeft"
+          :disabled="disableMoveLeft"
+        >
+          <span class="el-icon-arrow-left"></span>
+        </button>
+        <button class="Channel_MoveRight"
+          @click="onClickMoveRight"
+          :disabled="disableMoveRight"
+        >
+          <span class="el-icon-arrow-right"></span>
+        </button>
+        <button class="Channel_Remove" @click="onClickRemove">
+          <span class="el-icon-close"></span>
+        </button>
+      </div>
+    </transition>
     <div class="Channel_Messages">
       <Message v-for="message in channel.messages" :key="message.ts" v-bind="message" :users="users" :emojiList="emojiList" :messages="channel.messages" v-if="!message.parent_user_id"/>
     </div>
@@ -33,10 +54,26 @@ export default {
     users: Object,
     channel: Object,
     emojiList: Object,
+    disableMoveLeft: Boolean,
+    disableMoveRight: Boolean,
+  },
+  data() {
+    return {
+      menuOpened: false,
+    }
   },
   methods: {
+    onClickMenu() {
+      this.menuOpened = !this.menuOpened
+    },
+    onClickMoveLeft() {
+      this.$emit("moveLeft", { channelId: this.channelId, team_id: this.teamInfo.id })
+    },
+    onClickMoveRight() {
+      this.$emit("moveRight", { channelId: this.channelId, team_id: this.teamInfo.id })
+    },
     onClickRemove() {
-      this.$emit("removeChannel", { channelId: this.channelId, team_id: this.teamInfo.id })
+      this.$emit("remove", { channelId: this.channelId, team_id: this.teamInfo.id })
     },
   },
   components: {
@@ -86,14 +123,49 @@ export default {
     font-size: 0.7em;
     opacity: 0.8;
   }
-  &_Remove {
+  &_Menu {
     margin-left: auto;
     font-size: 1.2em;
-    opacity: 0.2;
+    opacity: 0.4;
     cursor: pointer;
     &:hover {
       opacity: 1;
+      color: #0576b9;
     }
   }
+  &_Controls {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+  }
+  &_Remove,
+  &_MoveLeft,
+  &_MoveRight {
+    font-size: 1.2em;
+    border: none;
+    margin: none;
+    padding: none;
+    cursor: pointer;
+    &:hover {
+      color: #0576b9;
+    }
+    &[disabled] {
+      pointer-events: none;
+    }
+  }
+  &_Remove {
+    margin-left: auto;
+  }
+}
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.1s ease;
+}
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateY(-10px);
+  opacity: 0;
 }
 </style>

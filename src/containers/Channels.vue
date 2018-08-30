@@ -25,9 +25,13 @@ export default {
               users: this.$store.getters[`${team_id}/users`],
               channel: this.channels[channelId],
               emojiList,
+              disableMoveLeft: !this.canMoveLeft({ channelId, team_id }),
+              disableMoveRight: !this.canMoveRight({ channelId, team_id }),
             },
             on: {
-              removeChannel: this.removeChannel,
+              remove: this.removeChannel,
+              moveLeft: this.moveLeftChannel,
+              moveRight: this.moveRightChannel,
             },
           })
         })}
@@ -40,14 +44,34 @@ export default {
       return channel.name
     },
     removeChannel({ channelId, team_id }) {
-      const index = findIndex(this.channelsOrder, channel => {
-        return channel.channelId === channelId && channel.team_id === team_id
-      })
-      console.log(this.channelsOrder)
-      console.log(channelId, team_id)
-      console.log(index)
+      const index = findIndex(
+        this.channelsOrder,
+        channel => channel.channelId === channelId && channel.team_id === team_id,
+      )
       if (index === -1) return
       this.$store.commit(types.REMOVE_CHANNEL, { channelId, team_id })
+    },
+    moveLeftChannel({ channelId, team_id }) {
+      if (!this.canMoveLeft({ channelId, team_id })) return
+      this.$store.commit(types.MOVE_LEFT_CHANNEL, { channelId, team_id })
+    },
+    moveRightChannel({ channelId, team_id }) {
+      if (!this.canMoveRight({ channelId, team_id })) return
+      this.$store.commit(types.MOVE_RIGHT_CHANNEL, { channelId, team_id })
+    },
+    canMoveRight({ channelId, team_id }) {
+      const index = findIndex(
+        this.channelsOrder,
+        channel => channel.channelId === channelId && channel.team_id === team_id,
+      )
+      return index !== -1 && index !== this.channelsOrder.length - 1
+    },
+    canMoveLeft({ channelId, team_id }) {
+      const index = findIndex(
+        this.channelsOrder,
+        channel => channel.channelId === channelId && channel.team_id === team_id,
+      )
+      return index !== -1 && index !== 0
     },
   },
 }
