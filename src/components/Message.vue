@@ -347,6 +347,16 @@ export default {
     border-bottom: 1px solid #f0f0f0;
     width: 100%;
     font-size: 0.85em;
+    &:before {
+      content: "";
+      display: block;
+      min-width: 3px;
+      border-radius: 2px;
+      background-color: #40a688;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      margin-right: 5px;
+    }
   }
 }
 </style>
