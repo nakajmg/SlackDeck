@@ -63,7 +63,8 @@ export default new Vuex.Store({
             const message = JSON.parse(event.data)
             if (!state.channels[message.channel]) return
             console.log("messageReceived", message)
-            commit(`${message.channel}/${types.ADD_MESSAGE}`, {
+            const mutation = message.thread_ts ? types.ADD_THREAD_MESSAGE : types.ADD_MESSAGE
+            commit(`${message.channel}/${mutation}`, {
               message,
             })
           })

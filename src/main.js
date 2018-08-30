@@ -48,7 +48,7 @@ store.subscribe(async ({ type, payload }, state) => {
       return saveToLocalStorage(state)
 
     case types.REMOVE_CHANNEL:
-      store.unregisterModule(["messages", payload.channelId])
+      store.unregisterModule(["channels", payload.channelId])
       return saveToLocalStorage(state)
 
     case types.RESTORE_FROM_LOCAL_STORAGE:

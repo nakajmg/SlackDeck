@@ -13,10 +13,9 @@
         </span>
       </span>
       <span class="Channel_Remove" @click="onClickRemove">
-        <span class="el-icon-error"></span>
+        <span class="el-icon-close"></span>
       </span>
     </div>
-    
     <div class="Channel_Messages">
       <Message v-for="message in channel.messages" :key="message.ts" v-bind="message" :users="users" :emojiList="emojiList" :messages="channel.messages" v-if="!message.parent_user_id"/>
     </div>
@@ -50,6 +49,8 @@ export default {
 .Channel {
   box-sizing: border-box;
   width: 330px;
+  min-width: 330px;
+  max-width: 330px;
   margin-right: 5px;
   border: 1px solid #eee;
   &:last-child {
@@ -88,7 +89,7 @@ export default {
   &_Remove {
     margin-left: auto;
     font-size: 1.2em;
-    opacity: 0.5;
+    opacity: 0.2;
     cursor: pointer;
     &:hover {
       opacity: 1;

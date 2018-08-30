@@ -97,6 +97,7 @@ export default {
     user: String,
     text: String,
     thread_ts: String,
+    parent_user_id: String,
     attachments: Array,
     reactions: {
       type: Array,
@@ -182,7 +183,7 @@ export default {
     _replaceUserName(text) {
       text = text.replace(/<@(U.*)>/g, (match, $1) => {
         const user = this.users[$1]
-        return user.name
+        return `<span data-user="${$1}">@${user.name}</span>`
       })
       return text
     },
@@ -232,11 +233,12 @@ export default {
   &_Text {
     white-space: pre-wrap;
     line-height: 1.35;
+    font-size: 1em;
     img[data-custom-emoji] {
       display: inline-flex;
       height: 1.4em;
       width: auto;
-      vertical-align: top;
+      vertical-align: text-bottom;
     }
     [data-emoji] {
       font-size: 1.4em;
@@ -251,6 +253,9 @@ export default {
       &:hover {
         color: #005e99;
       }
+    }
+    [data-user] {
+      color: #0576b9;
     }
   }
   &_Header {
