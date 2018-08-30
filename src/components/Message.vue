@@ -12,9 +12,24 @@
           {{timestamp}}
         </span>
       </div>
-      <div class="Message_Text" v-html="parsedText">
+      <div class="Message_Text"
+        v-html="parsedText"
+      >
       </div>
-      <div v-html="reaction"></div>
+      <div class="Message_Reactions"
+        v-if="reactions && reactions.length !== 0"
+      >
+        <span class="Message_Reaction"
+          v-for="(reaction, index) in reactionsToEmoji(reactions)"
+          :key="index"
+        > 
+          <span class="Message_ReactionIcon">
+            <img v-if="reaction.src" :src="reaction.src" :data-custom-emoji="reaction.name">
+            <template v-if="reaction.emoji">{{reaction.emoji}}</template>
+          </span>
+          <span>{{reaction.count}}</span>
+        </span>
+      </div>
       <div
         class="Message_Replies"
         v-if="replies.length !== 0"
@@ -35,9 +50,23 @@
                 {{convTimestamp(reply.ts)}}
               </span>
             </div>
-            <div 
-              class="Message_Text"
-              v-html="messageToHTML(reply.text)">
+            <div class="Message_Text"
+              v-html="messageToHTML(reply.text)"
+            >
+            </div>
+            <div class="Message_Reactions"
+              v-if="reply.reactions && reply.reactions.length !== 0"
+            >
+              <span class="Message_Reaction"
+                v-for="(reaction, index) in reactionsToEmoji(reply.reactions)"
+                :key="index"
+              > 
+                <span class="Message_ReactionIcon">
+                  <img v-if="reaction.src" :src="reaction.src" :data-custom-emoji="reaction.name">
+                  <template v-if="reaction.emoji">{{reaction.emoji}}</template>
+                </span>
+                <span>{{reaction.count}}</span>
+              </span>
             </div>
           </div>
         </div>
@@ -92,15 +121,6 @@ export default {
       // const regexImageLink = /<(https?:\/\/.*\.(png|jpg|gif))>/g
       return this.messageToHTML(this.text)
     },
-    reaction() {
-      const reactions = this.reactions.map(({ count, name }) => {
-        const emoji = emojify(`:${name}:`, name => {
-          return this._replaceCustomEmoji(name)
-        })
-        return `<span class="Message_Reaction"><span class="Message_ReactionIcon">${emoji}</span><span>${count}</span></span>`
-      })
-      return `<div class="Message_Reactions">${reactions.join("")}</div>`
-    },
     replyMessages() {
       const repliesTs = this.replies.map(({ ts }) => ts)
       return this.messages.filter(({ ts }) => {
@@ -130,6 +150,27 @@ export default {
       text = this._replaceLink(text)
       text = this._replaceBlockquote(text)
       return text || ""
+    },
+    reactionsToEmoji(reactions) {
+      const emojis = reactions.map(({ name, count }) => {
+        const emoji = this.reactionToEmoji({ name })
+        const reaction = {
+          name,
+          count,
+        }
+        this.isUrl(emoji) ? (reaction.src = emoji) : (reaction.emoji = emoji)
+        return reaction
+      })
+      return emojis
+    },
+    reactionToEmoji({ name }) {
+      const emoji = emojify(`:${name}:`, name => {
+        return this.emojiList[name]
+      })
+      return emoji
+    },
+    isUrl(str) {
+      return /https?:\/\/[^\s]+/.test(str)
     },
     _replaceUserName(text) {
       text = text.replace(/<@(U.*)>/g, (match, $1) => {
@@ -166,7 +207,7 @@ export default {
     },
     _replaceCustomEmoji(name) {
       const emoji = this.emojiList[name]
-      return emoji ? `<img data-custom-emoji="name" src="${emoji}">` : name
+      return emoji ? `<img data-custom-emoji="${name}" src="${emoji}">` : name
     },
   },
 }
@@ -256,6 +297,8 @@ export default {
     padding: 2px 3px;
     background-color: rgba(5, 118, 185, 0.05);
     border-color: rgba(5, 118, 185, 0.3);
+    color: #717274;
+    font-family: monospace;
   }
   &_ReactionIcon {
     width: 16px;
