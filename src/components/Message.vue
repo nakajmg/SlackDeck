@@ -23,11 +23,14 @@
           v-for="(reaction, index) in reactionsToEmoji(reactions)"
           :key="index"
         > 
-          <span class="Message_ReactionIcon">
+          <span class="Message_ReactionIcon"
+            v-for="user in reaction.users"
+            :title="convUserName({user})"
+            :key="user"
+          >
             <img v-if="reaction.src" :src="reaction.src" :data-custom-emoji="reaction.name">
-            <template v-if="reaction.emoji">{{reaction.emoji}}</template>
+            <span v-if="reaction.emoji" :data-emoji="`:${reaction.name}:`">{{reaction.emoji}}</span>
           </span>
-          <span>{{reaction.count}}</span>
         </span>
       </div>
       <div
@@ -61,11 +64,14 @@
                 v-for="(reaction, index) in reactionsToEmoji(reply.reactions)"
                 :key="index"
               > 
-                <span class="Message_ReactionIcon">
+                <span class="Message_ReactionIcon"
+                  v-for="user in reaction.users"
+                  :title="convUserName({user})"
+                  :key="user"
+                >
                   <img v-if="reaction.src" :src="reaction.src" :data-custom-emoji="reaction.name">
-                  <template v-if="reaction.emoji">{{reaction.emoji}}</template>
+                  <span v-if="reaction.emoji" :data-emoji="`:${reaction.name}:`">{{reaction.emoji}}</span>
                 </span>
-                <span>{{reaction.count}}</span>
               </span>
             </div>
           </div>
@@ -152,11 +158,12 @@ export default {
       return text || ""
     },
     reactionsToEmoji(reactions) {
-      const emojis = reactions.map(({ name, count }) => {
+      const emojis = reactions.map(({ name, count, users }) => {
         const emoji = this.reactionToEmoji({ name })
         const reaction = {
           name,
           count,
+          users,
         }
         this.isUrl(emoji) ? (reaction.src = emoji) : (reaction.emoji = emoji)
         return reaction
@@ -234,6 +241,17 @@ export default {
     [data-emoji] {
       font-size: 1.4em;
     }
+    a {
+      color: #0576b9;
+      &:link {
+        color: #0576b9;
+      }
+      &:active,
+      &:focus,
+      &:hover {
+        color: #005e99;
+      }
+    }
   }
   &_Header {
     font-size: 0.8em;
@@ -286,27 +304,32 @@ export default {
   }
   &_Reaction {
     align-items: center;
-    background: #fff;
-    border: 1px solid #e8e8e8;
-    border-radius: 5px;
     display: inline-flex;
     font-size: 11px;
     line-height: 16px;
     margin-bottom: 5px;
-    margin-right: 5px;
-    padding: 2px 3px;
-    background-color: rgba(5, 118, 185, 0.05);
-    border-color: rgba(5, 118, 185, 0.3);
+    // margin-right: 5px;
+    // padding: 2px 3px;
+
     color: #717274;
     font-family: monospace;
   }
   &_ReactionIcon {
-    width: 16px;
-    margin-right: 3px;
-    img {
+    padding: 2px;
+    border-radius: 5px;
+    // border: 1px solid rgba(5, 118, 185, 0.3);
+    // background-color: rgba(5, 118, 185, 0.05);
+    border: 1px solid #f0f0f0;
+    text-align: center;
+    margin-right: 2px;
+    [data-custom-emoji] {
       width: 100%;
+      width: 16px;
       height: auto;
       display: block;
+    }
+    [data-emoji] {
+      margin-left: 2px;
     }
   }
   // &_Replies {}
