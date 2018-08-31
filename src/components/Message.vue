@@ -99,6 +99,7 @@ export default {
     thread_ts: String,
     parent_user_id: String,
     attachments: Array,
+    edited: Object,
     reactions: {
       type: Array,
       default: () => [],
@@ -156,6 +157,7 @@ export default {
       text = this._replaceEmoji(text)
       text = this._replaceLink(text)
       text = this._replaceBlockquote(text)
+      text += this.edited ? "<span class='Message_Edited'>(edited)</span>" : ""
       return text || ""
     },
     reactionsToEmoji(reactions) {
@@ -257,6 +259,12 @@ export default {
     [data-user] {
       color: #0576b9;
     }
+  }
+  &_Edited {
+    opacity: 0.4;
+    font-size: 0.7em;
+    margin-left: 0.25em;
+    white-space: nowrap;
   }
   &_Header {
     font-size: 0.8em;

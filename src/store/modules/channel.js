@@ -24,16 +24,38 @@ export default {
         return state.messages.push(deepFreeze(message))
       }
       const parentMessage = cloneDeep(state.messages[index])
-      parentMessage.replies = parentMessage.replies || []
-      parentMessage.replies.push(
-        deepFreeze({
-          ts: message.ts,
-          user: message.user,
-        }),
-      )
       message.parent_user_id = parentMessage.user
-      state.messages.splice(index, 1, deepFreeze(parentMessage))
       state.messages.push(deepFreeze(message))
+    },
+    [types.UPDATE_MESSAGE](
+      state,
+      {
+        message: { message, previous_message },
+      },
+    ) {
+      const index = findIndex(state.messages, ({ ts }) => ts === previous_message.ts)
+      if (index === -1) return
+      state.messages.splice(index, 1, deepFreeze(message))
+    },
+    [types.DELETE_MESSAGE](
+      state,
+      {
+        message: { previous_message },
+      },
+    ) {
+      const index = findIndex(state.messages, ({ ts }) => ts === previous_message.ts)
+      if (index === -1) return
+      state.messages.splice(index, 1)
+    },
+    [types.REPLIED_MESSAGE](
+      state,
+      {
+        message: { message },
+      },
+    ) {
+      const index = findIndex(state.messages, ({ ts }) => ts === message.ts)
+      if (index === -1) return
+      state.messages.splice(index, 1, deepFreeze(message))
     },
     [types.SET_INFO](state, { access_token, channelId, messages }) {
       state.access_token = access_token

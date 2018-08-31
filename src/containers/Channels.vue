@@ -18,6 +18,7 @@ export default {
 
           return h(Channel, {
             class: "Channels_Channel",
+            key: channelId,
             props: {
               teamInfo,
               channelId,
