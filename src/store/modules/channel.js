@@ -1,5 +1,5 @@
 import types from "../types"
-import api from "../../modules/api"
+import api from "../../utils/api"
 import reverse from "lodash/reverse"
 import deepFreeze from "deep-freeze"
 import cloneDeep from "lodash/cloneDeep"

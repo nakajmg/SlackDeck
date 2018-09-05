@@ -16,6 +16,9 @@
         v-html="parsedText"
       >
       </div>
+      <div>
+        <Attachment v-for="attachment in attachments" v-bind="attachment" :key="attachment.id"/>
+      </div>
       <div class="Message_Reactions"
         v-if="reactions && reactions.length !== 0"
       >
@@ -87,8 +90,12 @@ import toNumber from "lodash/toNumber"
 import includes from "lodash/includes"
 import DateTime from "luxon/src/datetime"
 import { emojify } from "node-emoji"
+import Attachment from "./Attachment.vue"
 export default {
   name: "Message",
+  components: {
+    Attachment,
+  },
   props: {
     users: Object,
     emojiList: Object,
@@ -351,7 +358,7 @@ export default {
     text-align: left;
     word-break: break-all;
     display: flex;
-    padding: 5px;
+    padding: 5px 0;
     border-bottom: 1px solid #f0f0f0;
     width: 100%;
     font-size: 0.85em;

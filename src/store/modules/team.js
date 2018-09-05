@@ -1,6 +1,6 @@
 import deepFreeze from "deep-freeze"
 import types from "../types"
-import api from "../../modules/api"
+import api from "../../utils/api"
 import zipObject from "lodash/zipObject"
 import map from "lodash/map"
 export default {

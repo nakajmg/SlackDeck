@@ -33,7 +33,7 @@ export default token => {
         })
         return res.channels
       },
-      async history({ channelId, count = 5 }) {
+      async history({ channelId, count = 2 }) {
         const url = ENTRY_POINT`/channels.history`
         const res = await _get(url, {
           channel: channelId,
