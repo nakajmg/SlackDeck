@@ -1,20 +1,35 @@
 <template>
   <div class="Attachment">
-    <div class="Attachment_Border" :style="{backgroundColor:'#' + color}"></div>
+    <div class="Attachment_Pretext">{{pretext}}</div>
     <div class="Attachment_Content">
-      <div class="Attachment_Header">
-        <span class="Attachment_Icon">
-          <img :src="author_icon">
-        </span>
-        <span class="Attachment_Author">
-          <a :href="author_link" rel="no-opener" target="_blank">
-            {{author_name}}
+      <div class="Attachment_Border"
+        :style="{backgroundColor:'#' + color}"
+      >
+      </div>
+      <div class="Attachment_Main">
+        <div class="Attachment_Header">
+          <span class="Attachment_AuthorIcon" v-if="author_icon">
+            <img :src="author_icon">
+          </span>
+          <span class="Attachment_Author" v-if="author_name">
+            <a :href="author_link" rel="no-opener" target="_blank">
+              {{author_name}}
+            </a>
+          </span>
+        </div>
+        <div class="Attachment_Title">
+          <a :href="title_link ? title_link : null">
+            {{title}}
           </a>
-        </span>
-      </div>
-      <div class="Attachment_Body" v-html="bodyHTML">
-      </div>
-      <div class="Attachment_Footer" v-html="footerHTML">
+        </div>
+        <div class="Attachment_Body" v-html="bodyHTML">
+        </div>
+        <div class="Attachment_Footer">
+          <span class="Attachment_FooterIcon">
+            <img :src="footer_icon">
+          </span>
+          <span v-html="footerHTML"></span>
+        </div>
       </div>
     </div>
   </div>
@@ -32,8 +47,12 @@ export default {
     author_name: String,
     color: String,
     footer: String,
+    footer_icon: String,
     markdwn_in: Array,
     text: String,
+    title: String,
+    title_link: String,
+    pretext: String,
   },
   computed: {
     bodyHTML() {
@@ -48,7 +67,33 @@ export default {
 
 <style lang="scss">
 .Attachment {
-  display: flex;
+  &_Pretext {
+    font-size: 0.8em;
+  }
+  &_Content {
+    display: flex;
+  }
+  &_Title {
+    font-weight: 700;
+    font-size: 0.9em;
+    a {
+      color: #0576b9;
+      &:link {
+        color: #0576b9;
+      }
+      &:active,
+      &:focus,
+      &:hover {
+        color: #005e99;
+      }
+      &:link {
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
   &_Border {
     min-width: 3px;
     border-radius: 3px;
@@ -61,7 +106,8 @@ export default {
     align-items: center;
     margin-bottom: 3px;
   }
-  &_Icon {
+  &_AuthorIcon,
+  &_FooterIcon {
     display: block;
     width: 1.2em;
     height: 1.2em;
@@ -92,6 +138,8 @@ export default {
   &_Footer {
     font-size: 0.75em;
     line-height: 1.7;
+    display: flex;
+    align-items: center;
     p {
       margin: 0;
     }

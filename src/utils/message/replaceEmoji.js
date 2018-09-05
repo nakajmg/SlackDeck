@@ -1,5 +1,5 @@
 import { emojify } from "node-emoji"
-export default (text, emojiList) => {
+export default (text = "", emojiList) => {
   return emojify(
     text,
     name => {
