@@ -13,7 +13,7 @@
         </span>
       </div>
       <div class="Message_Text"
-        v-html="parsedText"
+        v-html="bodyHTML"
       >
       </div>
       <div>
@@ -23,12 +23,12 @@
         v-if="reactions && reactions.length !== 0"
       >
         <span class="Message_Reaction"
-          v-for="(reaction, index) in reactionsToEmoji(reactions)"
+          v-for="(reaction, index) in reactionsToEmoji(reactions, emojiList)"
           :key="index"
         > 
           <span class="Message_ReactionIcon"
             v-for="user in reaction.users"
-            :title="convUserName({user})"
+            :title="convUserName({user}, users)"
             :key="user"
           >
             <img v-if="reaction.src" :src="reaction.src" :data-custom-emoji="reaction.name">
@@ -45,19 +45,19 @@
           :key="reply.ts"
         >
           <div class="Message_UserIcon">
-            <img :src="convUserIcon(reply.user)" class="Message_Icon">
+            <img :src="convUserIcon(reply.user, users)" class="Message_Icon">
           </div>
           <div class="Message_Content">
             <div class="Message_Header">
               <span class="Message_UserName">
-                {{convUserName(reply)}}
+                {{convUserName(reply, users)}}
               </span>
               <span class="Message_Timestamp">
                 {{convTimestamp(reply.ts)}}
               </span>
             </div>
             <div class="Message_Text"
-              v-html="messageToHTML(reply.text)"
+              v-html="convertMessageToHTML(reply, {users, emojiList})"
             >
             </div>
             <div class="Message_Reactions"
@@ -85,12 +85,13 @@
 </template>
 
 <script>
-import first from "lodash/first"
-import toNumber from "lodash/toNumber"
 import includes from "lodash/includes"
-import DateTime from "luxon/src/datetime"
-import { emojify } from "node-emoji"
 import Attachment from "./Attachment.vue"
+import convTimestamp from "../utils/message/convTimestamp"
+import convUserIcon from "../utils/message/convUserIcon"
+import convUserName from "../utils/message/convUserName"
+import convertMessageToHTML from "../utils/message/convertMessageToHTML"
+import reactionsToEmoji from "../utils/message/reactionsToEmoji"
 export default {
   name: "Message",
   components: {
@@ -123,18 +124,17 @@ export default {
   },
   computed: {
     userName() {
-      return this.convUserName({ user: this.user, bot_id: this.bot_id })
+      return this.convUserName({ user: this.user, bot_id: this.bot_id }, this.users)
     },
     timestamp() {
       return this.convTimestamp(this.ts)
     },
     userIcon() {
-      return this.convUserIcon(this.user)
+      return this.convUserIcon(this.user, this.users)
     },
-    parsedText() {
-      // const regexMention = /<@([A-Za-z0-9]+)>/g
-      // const regexImageLink = /<(https?:\/\/.*\.(png|jpg|gif))>/g
-      return this.messageToHTML(this.text)
+    bodyHTML() {
+      const { text, edited, users, emojiList } = this.$props
+      return this.convertMessageToHTML({ text, edited }, { users, emojiList })
     },
     replyMessages() {
       const repliesTs = this.replies.map(({ ts }) => ts)
@@ -144,88 +144,11 @@ export default {
     },
   },
   methods: {
-    convTimestamp(ts) {
-      const time = toNumber(first(ts.split("."))) * 1000
-      return DateTime.fromMillis(time).toFormat("MM/dd HH:mm:ss")
-    },
-    convUserIcon(userId) {
-      const user = this.users[userId]
-      if (!user) return "https://a.slack-edge.com/0180/img/slackbot_72.png"
-      const icon = user.profile.image_72
-      return icon
-    },
-    convUserName({ user, bot_id }) {
-      if (bot_id) return user || "Bot"
-      const _user = this.users[user] || {}
-      return _user.name || "unknown"
-    },
-    messageToHTML(text) {
-      text = this._replaceUserName(text)
-      text = this._replaceEmoji(text)
-      text = this._replaceLink(text)
-      text = this._replaceBlockquote(text)
-      text += this.edited ? "<span class='Message_Edited'>(edited)</span>" : ""
-      return text || ""
-    },
-    reactionsToEmoji(reactions) {
-      const emojis = reactions.map(({ name, count, users }) => {
-        const emoji = this.reactionToEmoji({ name })
-        const reaction = {
-          name,
-          count,
-          users,
-        }
-        this.isUrl(emoji) ? (reaction.src = emoji) : (reaction.emoji = emoji)
-        return reaction
-      })
-      return emojis
-    },
-    reactionToEmoji({ name }) {
-      const emoji = emojify(`:${name}:`, name => {
-        return this.emojiList[name]
-      })
-      return emoji
-    },
-    isUrl(str) {
-      return /https?:\/\/[^\s]+/.test(str)
-    },
-    _replaceUserName(text) {
-      text = text.replace(/<@(U.*)>/g, (match, $1) => {
-        const user = this.users[$1]
-        return `<span data-user="${$1}">@${user.name}</span>`
-      })
-      return text
-    },
-    _replaceEmoji(text) {
-      return emojify(
-        text,
-        name => {
-          return this._replaceCustomEmoji(name)
-        },
-        (code, name) => {
-          return `<span data-emoji="${name}">${code}</span>`
-        },
-      )
-    },
-    _replaceLink(text) {
-      text = text.replace(/<(https?:\/\/[^\s]+)\|(.*?)>/g, (url, $1, $2) => {
-        return `<a href="${$1}" target="_blank" rel="noopener">${$2}</a>`
-      })
-      text = text.replace(/<(https?:\/\/[^\s]+)>/g, (url, $1) => {
-        return `<a href="${$1}" target="_blank" rel="noopener">${$1}</a>`
-      })
-      return text
-    },
-    _replaceBlockquote(text) {
-      text = text.replace(/&gt;(.*)$/g, (match, $1) => {
-        return `<blockquote class="Message_Blockquote">${$1}</blockquote>`
-      })
-      return text
-    },
-    _replaceCustomEmoji(name) {
-      const emoji = this.emojiList[name]
-      return emoji ? `<img data-custom-emoji="${name}" src="${emoji}">` : name
-    },
+    convTimestamp,
+    convUserIcon,
+    convUserName,
+    convertMessageToHTML,
+    reactionsToEmoji,
   },
 }
 </script>

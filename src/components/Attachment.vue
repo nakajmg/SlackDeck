@@ -12,9 +12,9 @@
           </a>
         </span>
       </div>
-      <div class="Attachment_Body" v-html="body">
+      <div class="Attachment_Body" v-html="bodyHTML">
       </div>
-      <div class="Attachment_Footer" v-html="_replaceLink(footer)">
+      <div class="Attachment_Footer" v-html="footerHTML">
       </div>
     </div>
   </div>
@@ -22,6 +22,7 @@
 
 <script>
 import MarkdownIt from "markdown-it"
+import replaceLink from "../utils/message/replaceLink"
 const mdit = new MarkdownIt({ html: true })
 export default {
   name: "Attachment",
@@ -35,19 +36,11 @@ export default {
     text: String,
   },
   computed: {
-    body() {
-      return mdit.render(this._replaceLink(this.text))
+    bodyHTML() {
+      return mdit.render(replaceLink(this.text))
     },
-  },
-  methods: {
-    _replaceLink(text) {
-      text = text.replace(/<(https?:\/\/[^\s]+)\|(.*?)>/g, (url, $1, $2) => {
-        return `<a href="${$1}" target="_blank" rel="noopener">${$2}</a>`
-      })
-      text = text.replace(/<(https?:\/\/[^\s]+)>/g, (url, $1) => {
-        return `<a href="${$1}" target="_blank" rel="noopener">${$1}</a>`
-      })
-      return text
+    footerHTML() {
+      return replaceLink(this.footer)
     },
   },
 }
