@@ -244,6 +244,7 @@ export default {
   &_Reactions {
     display: flex;
     align-items: center;
+    margin-top: 3px;
   }
   &_Reaction {
     align-items: center;

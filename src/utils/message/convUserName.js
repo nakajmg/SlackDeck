@@ -1,5 +1,5 @@
 export default ({ user, bot_id }, users) => {
-  if (bot_id) return user || "Bot"
-  const _user = users[user] || {}
-  return _user.name || "unknown"
+  const _user = users[user]
+  if (_user.name) return bot_id ? _user.real_name : _user.name
+  return user
 }

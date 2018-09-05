@@ -66,5 +66,12 @@ export default token => {
         return res.emoji
       },
     },
+    bots: {
+      async info(bot) {
+        const url = ENTRY_POINT`/bots.info`
+        const res = await _get(url, { bot })
+        return res.bot
+      },
+    },
   }
 }
