@@ -10,6 +10,7 @@ import cloneDeep from "lodash/cloneDeep"
 import includes from "lodash/includes"
 import findIndex from "lodash/findIndex"
 import deepFreeze from "deep-freeze"
+import registerSocketListeners from "./registerSocketListeners"
 Vue.use(Vuex)
 const sockets = new Map()
 export default new Vuex.Store({
@@ -75,39 +76,13 @@ export default new Vuex.Store({
   },
   actions: {
     [types.CONNECT_RTM]({ state, commit, dispatch }, { access_token, team_id }) {
-      if (sockets.get(access_token)) return Promise.resolve()
+      if (sockets.get(access_token)) return Promise.resolve(sockets.get(access_token))
       return api(access_token)
         .rtm.connect()
         .then(socket => {
           sockets.set(access_token, socket)
-          socket.on("message", event => {
-            const message = JSON.parse(event.data)
-            if (!state.channels[message.channel]) return
-            const mutation = message.thread_ts ? types.ADD_THREAD_MESSAGE : types.ADD_MESSAGE
-            commit(`${message.channel}/${mutation}`, {
-              message,
-            })
-            console.log("messageReceiqved", message)
-            if (!state.notification) return
-            dispatch(types.PUSH_NOTIFICATION, { team_id, message })
-          })
-          socket.on("message.message_changed", event => {
-            const message = JSON.parse(event.data)
-            if (!state.channels[message.channel]) return
-            commit(`${message.channel}/${types.UPDATE_MESSAGE}`, { message })
-          })
-          socket.on("message.message_deleted", event => {
-            const message = JSON.parse(event.data)
-            if (!state.channels[message.channel]) return
-            commit(`${message.channel}/${types.DELETE_MESSAGE}`, { message })
-          })
-
-          socket.on("message.message_replied", event => {
-            const message = JSON.parse(event.data)
-            if (!state.channels[message.channel]) return
-            console.log("replied", message)
-            commit(`${message.channel}/${types.REPLIED_MESSAGE}`, { message })
-          })
+          registerSocketListeners(socket, { team_id, state, commit, dispatch })
+          return socket
         })
     },
     [types.PUSH_NOTIFICATION]({ getters }, { team_id, message }) {

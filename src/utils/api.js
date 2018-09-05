@@ -1,5 +1,5 @@
 import axios from "axios"
-import handleSocket from "./handleSocket"
+import extendScoket from "./extendSocket"
 const ENTRY_POINT = strings => `https://slack.com/api${strings[0]}`
 
 export default token => {
@@ -55,7 +55,7 @@ export default token => {
         const res = await _get(url)
         console.log(res)
         const socket = new WebSocket(res.url)
-        handleSocket(socket)
+        extendScoket(socket)
         return socket
       },
     },

@@ -4,6 +4,7 @@ import reverse from "lodash/reverse"
 import deepFreeze from "deep-freeze"
 import cloneDeep from "lodash/cloneDeep"
 import findIndex from "lodash/findIndex"
+import reject from "lodash/reject"
 export default {
   namespaced: true,
   state() {
@@ -61,6 +62,55 @@ export default {
       state.access_token = access_token
       state.channelId = channelId
       state.messages = state.messages.concat(deepFreeze(messages))
+    },
+    [types.ADD_REACTION](state, { message }) {
+      const index = findIndex(state.messages, ({ ts }) => ts === message.item.ts)
+      if (index === -1) return
+      const prevMessage = cloneDeep(state.messages[index])
+      if (!prevMessage.reactions) {
+        prevMessage.reactions = [
+          {
+            count: 1,
+            name: message.reaction,
+            users: [message.user],
+          },
+        ]
+        return state.messages.splice(index, 1, deepFreeze(prevMessage))
+      }
+      const reactionIndex = findIndex(
+        prevMessage.reactions,
+        reaction => reaction.name === message.reaction,
+      )
+      if (reactionIndex === -1) {
+        prevMessage.reactions.push({
+          count: 1,
+          name: message.reaction,
+          users: [message.user],
+        })
+        return state.messages.splice(index, 1, deepFreeze(prevMessage))
+      }
+      const prevReaction = prevMessage.reactions[reactionIndex]
+      prevReaction.count = prevReaction.count + 1
+      prevReaction.users.push(message.user)
+      return state.messages.splice(index, 1, deepFreeze(prevMessage))
+    },
+    [types.REMOVE_REACTION](state, { message }) {
+      const index = findIndex(state.messages, ({ ts }) => ts === message.item.ts)
+      if (index === -1) return
+      const prevMessage = cloneDeep(state.messages[index])
+      const reactionIndex = findIndex(
+        prevMessage.reactions,
+        reaction => reaction.name === message.reaction,
+      )
+      if (prevMessage.reactions[reactionIndex].count === 1) {
+        prevMessage.reactions.splice(reactionIndex, 1)
+      } else {
+        prevMessage.reactions[reactionIndex].users = reject(
+          prevMessage.reactions[reactionIndex].users,
+          message.user,
+        )
+      }
+      return state.messages.splice(index, 1, deepFreeze(prevMessage))
     },
   },
   actions: {

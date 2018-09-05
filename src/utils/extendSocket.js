@@ -15,17 +15,13 @@ export default function handleSocket(socket) {
     if (event.type === "message") {
       switch (data.type) {
         case "message_changed":
-          return handler(event)
         case "message_replied":
-          return handler(event)
         case "message_deleted":
-          return handler(event)
         case "message":
-          return handler(event)
         case "reaction_added":
-          return handler(event)
+        case "pref_change":
         case "reaction_removed":
-          return handler(event)
+          return handler({ ...event, ...{ data } })
         default:
           return
       }
