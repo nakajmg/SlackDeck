@@ -121,6 +121,14 @@ export default {
       default: "",
     },
     messages: Array,
+    client_msg_id: String,
+    team: String,
+    channel: String,
+    event_ts: String,
+    reply_count: Number,
+    subscribed: Boolean,
+    last_read: String,
+    unread_count: Number,
   },
   computed: {
     userName() {
@@ -162,10 +170,20 @@ export default {
   padding: 5px;
   border-bottom: 1px solid #f0f0f0;
   width: 100%;
+  &_Content {
+    flex-grow: 1;
+    width: calc(100% - 2.75em);
+  }
+  &_UserIcon {
+    min-width: 2.25em;
+    height: 2.25em;
+    border-radius: 3px;
+    margin-right: 0.5em;
+  }
   &_Text {
-    white-space: pre-wrap;
+    // white-space: pre-wrap;
     line-height: 1.35;
-    font-size: 1em;
+    font-size: 0.9em;
     img[data-custom-emoji] {
       display: inline-flex;
       height: 1.4em;
@@ -189,6 +207,26 @@ export default {
     [data-user] {
       color: #0576b9;
     }
+    p {
+      margin: 0;
+    }
+    pre {
+      background: #f9f9f9;
+      font-family: Monaco, Menlo, Consolas, "Courier New", monospace !important;
+      padding: 0.3em 0.5em;
+      font-variant-ligatures: none;
+      word-break: normal;
+      tab-size: 2;
+      border-radius: 2px;
+      margin: 0.3em 0;
+      font-size: 0.7rem;
+      line-height: 1.15rem;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      overflow: scroll;
+      code {
+        font-family: Monaco, Menlo, Consolas, "Courier New", monospace !important;
+      }
+    }
   }
   &_Edited {
     opacity: 0.4;
@@ -200,12 +238,6 @@ export default {
     font-size: 0.8em;
     display: flex;
     align-items: bottom;
-  }
-  &_UserIcon {
-    min-width: 2.25em;
-    height: 2.25em;
-    border-radius: 3px;
-    margin-right: 0.5em;
   }
   &_Icon {
     height: 100%;
@@ -221,9 +253,6 @@ export default {
     margin-left: auto;
     font-size: 0.85em;
     opacity: 0.8;
-  }
-  &_Content {
-    flex-grow: 1;
   }
   &_Blockquote {
     position: relative;

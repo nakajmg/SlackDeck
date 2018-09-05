@@ -75,7 +75,7 @@ export default {
   }
   &_Title {
     font-weight: 700;
-    font-size: 0.9em;
+    font-size: 0.75em;
     a {
       color: #0576b9;
       &:link {
@@ -136,7 +136,7 @@ export default {
   }
   &_Body,
   &_Footer {
-    font-size: 0.75em;
+    font-size: 0.7em;
     line-height: 1.7;
     display: flex;
     align-items: center;
@@ -148,15 +148,14 @@ export default {
       font-weight: 600;
     }
     code {
-      font-family: Monaco, Menlo, Consolas, "Courier New", monospace !important;
-      font-size: 1em;
-      line-height: 1em;
+      font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+      font-size: 0.85em;
+      padding: 1px 2px 1px;
       white-space: normal;
       color: #d72b3f;
-      padding: 2px 3px 1px;
-      font-variant-ligatures: none;
-      tab-size: 4;
       background-color: #f7f7f9;
+      font-variant-ligatures: none;
+      tab-size: 2;
       border: 1px solid #e1e1e8;
       word-break: break-word;
     }
