@@ -8,6 +8,9 @@
         <span class="Message_UserName">
           {{userName}}
         </span>
+        <span @click="openOnSlack">
+          slack
+        </span>
         <span class="Message_Timestamp">
           {{timestamp}}
         </span>
@@ -92,6 +95,7 @@ import convUserIcon from "../utils/message/convUserIcon"
 import convUserName from "../utils/message/convUserName"
 import convertMessageToHTML from "../utils/message/convertMessageToHTML"
 import reactionsToEmoji from "../utils/message/reactionsToEmoji"
+import openOnSlack from "../utils/openOnSlack"
 export default {
   name: "Message",
   components: {
@@ -157,6 +161,13 @@ export default {
     convUserName,
     convertMessageToHTML,
     reactionsToEmoji,
+    openOnSlack() {
+      openOnSlack({
+        team: this.team,
+        channel: this.channel,
+        ts: this.ts,
+      })
+    },
   },
 }
 </script>
@@ -312,7 +323,7 @@ export default {
     word-break: break-all;
     display: flex;
     padding: 5px 0;
-    border-bottom: 1px solid #f0f0f0;
+    // border-bottom: 1px solid #f0f0f0;
     width: 100%;
     font-size: 0.85em;
     &:before {
