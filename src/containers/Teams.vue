@@ -1,7 +1,7 @@
 <script>
 import { mapState } from "vuex"
 import Team from "../components/Team.vue"
-import map from "lodash/map"
+import { map } from "lodash"
 export default {
   name: "Teams",
   computed: {

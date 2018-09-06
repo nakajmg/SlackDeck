@@ -25,63 +25,19 @@
       <div class="Message_Reactions"
         v-if="reactions && reactions.length !== 0"
       >
-        <span class="Message_Reaction"
+        <Reaction
           v-for="(reaction, index) in reactionsToEmoji(reactions, emojiList)"
           :key="index"
-        > 
-          <span class="Message_ReactionIcon"
-            v-for="user in reaction.users"
-            :title="convUserName({user}, users)"
-            :key="user"
-          >
-            <img v-if="reaction.src" :src="reaction.src" :data-custom-emoji="reaction.name">
-            <span v-if="reaction.emoji" :data-emoji="`:${reaction.name}:`">{{reaction.emoji}}</span>
-          </span>
-        </span>
+          v-bind="reaction"
+          :usersList="users"
+          :emojiList="emojiList"
+        />
       </div>
       <div
         class="Message_Replies"
         v-if="replies.length !== 0"
       >
-        <div class="Message_Reply"
-          v-for="reply in replyMessages"
-          :key="reply.ts"
-        >
-          <div class="Message_UserIcon">
-            <img :src="convUserIcon(reply.user, users)" class="Message_Icon">
-          </div>
-          <div class="Message_Content">
-            <div class="Message_Header">
-              <span class="Message_UserName">
-                {{convUserName(reply, users)}}
-              </span>
-              <span class="Message_Timestamp">
-                {{convTimestamp(reply.ts)}}
-              </span>
-            </div>
-            <div class="Message_Text"
-              v-html="convertMessageToHTML(reply, {users, emojiList})"
-            >
-            </div>
-            <div class="Message_Reactions"
-              v-if="reply.reactions && reply.reactions.length !== 0"
-            >
-              <span class="Message_Reaction"
-                v-for="(reaction, index) in reactionsToEmoji(reply.reactions)"
-                :key="index"
-              > 
-                <span class="Message_ReactionIcon"
-                  v-for="user in reaction.users"
-                  :title="convUserName({user})"
-                  :key="user"
-                >
-                  <img v-if="reaction.src" :src="reaction.src" :data-custom-emoji="reaction.name">
-                  <span v-if="reaction.emoji" :data-emoji="`:${reaction.name}:`">{{reaction.emoji}}</span>
-                </span>
-              </span>
-            </div>
-          </div>
-        </div>
+        <Reply v-for="reply in replyMessages" :key="reply.ts" v-bind="reply" :users="users" :emojiList="emojiList"/>
       </div>
     </div>
   </div>
@@ -89,7 +45,9 @@
 
 <script>
 import includes from "lodash/includes"
-import Attachment from "./Attachment.vue"
+import Attachment from "./Message/Attachment.vue"
+import Reply from "./Message/Reply.vue"
+import Reaction from "./Message/Reaction.vue"
 import convTimestamp from "../utils/message/convTimestamp"
 import convUserIcon from "../utils/message/convUserIcon"
 import convUserName from "../utils/message/convUserName"
@@ -100,6 +58,8 @@ export default {
   name: "Message",
   components: {
     Attachment,
+    Reply,
+    Reaction,
   },
   props: {
     users: Object,
@@ -285,57 +245,6 @@ export default {
     display: flex;
     align-items: center;
     margin-top: 3px;
-  }
-  &_Reaction {
-    align-items: center;
-    display: inline-flex;
-    font-size: 11px;
-    line-height: 16px;
-    margin-bottom: 5px;
-    // margin-right: 5px;
-    // padding: 2px 3px;
-
-    color: #717274;
-    font-family: monospace;
-  }
-  &_ReactionIcon {
-    padding: 2px;
-    border-radius: 5px;
-    // border: 1px solid rgba(5, 118, 185, 0.3);
-    // background-color: rgba(5, 118, 185, 0.05);
-    border: 1px solid #f0f0f0;
-    text-align: center;
-    margin-right: 2px;
-    [data-custom-emoji] {
-      width: 100%;
-      width: 16px;
-      height: auto;
-      display: block;
-    }
-    [data-emoji] {
-      margin-left: 2px;
-    }
-  }
-  // &_Replies {}
-  &_Reply {
-    box-sizing: border-box;
-    text-align: left;
-    word-break: break-all;
-    display: flex;
-    padding: 5px 0;
-    // border-bottom: 1px solid #f0f0f0;
-    width: 100%;
-    font-size: 0.85em;
-    &:before {
-      content: "";
-      display: block;
-      min-width: 3px;
-      border-radius: 2px;
-      background-color: #40a688;
-      margin-top: 0px;
-      margin-bottom: 0px;
-      margin-right: 5px;
-    }
   }
 }
 </style>

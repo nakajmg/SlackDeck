@@ -37,7 +37,7 @@
 
 <script>
 import MarkdownIt from "markdown-it"
-import replaceLink from "../utils/message/replaceLink"
+import replaceLink from "../../utils/message/replaceLink"
 const mdit = new MarkdownIt({ html: true })
 export default {
   name: "Attachment",

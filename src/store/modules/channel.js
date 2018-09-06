@@ -1,10 +1,7 @@
 import types from "../types"
 import api from "../../utils/api"
-import reverse from "lodash/reverse"
 import deepFreeze from "deep-freeze"
-import cloneDeep from "lodash/cloneDeep"
-import findIndex from "lodash/findIndex"
-import reject from "lodash/reject"
+import { reverse, cloneDeep, findIndex, reject } from "lodash"
 export default {
   namespaced: true,
   state() {

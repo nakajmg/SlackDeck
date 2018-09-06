@@ -1,5 +1,4 @@
-import first from "lodash/first"
-import toNumber from "lodash/toNumber"
+import { first, toNumber } from "lodash"
 import DateTime from "luxon/src/datetime"
 
 export default ts => {

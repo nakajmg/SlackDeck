@@ -1,8 +1,7 @@
 <script>
 import { mapState } from "vuex"
 import Channel from "../components/Channel.vue"
-import find from "lodash/find"
-import findIndex from "lodash/findIndex"
+import { find, findIndex } from "lodash"
 import types from "../store/types"
 export default {
   name: "Channels",

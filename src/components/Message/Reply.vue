@@ -1,0 +1,95 @@
+<template>
+  <div class="Reply"
+  >
+    <div class="Message_UserIcon">
+      <img :src="convUserIcon(user, users)" class="Message_Icon">
+    </div>
+    <div class="Message_Content">
+      <div class="Message_Header">
+        <span class="Message_UserName">
+          {{convUserName({user}, users)}}
+        </span>
+        <span class="Message_Timestamp">
+          {{convTimestamp(ts)}}
+        </span>
+      </div>
+      <div class="Message_Text"
+        v-html="convertMessageToHTML({text, edited}, {users, emojiList})"
+      >
+      </div>
+      <div class="Message_Reactions"
+        v-if="reactions && reactions.length !== 0"
+      >
+        <Reaction class="Message_Reaction"
+          v-for="(reaction, index) in reactionsToEmoji(reactions, emojiList)"
+          :key="index"
+          v-bind="reaction"
+          :emojiList="emojiList"
+          :usersList="users"
+        /> 
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<script>
+import convTimestamp from "../../utils/message/convTimestamp"
+import convUserIcon from "../../utils/message/convUserIcon"
+import convUserName from "../../utils/message/convUserName"
+import reactionsToEmoji from "../../utils/message/reactionsToEmoji"
+import convertMessageToHTML from "../../utils/message/convertMessageToHTML"
+import Reaction from "./Reaction.vue"
+export default {
+  name: "Reply",
+  components: {
+    Reaction,
+  },
+  props: {
+    client_msg_id: String,
+    parent_user_id: String,
+    text: String,
+    thread_ts: String,
+    ts: String,
+    type: String,
+    user: String,
+    edited: Object,
+    reactions: {
+      type: Array,
+      default: () => [],
+    },
+    users: Object,
+    emojiList: Object,
+  },
+  methods: {
+    convTimestamp,
+    convUserIcon,
+    convUserName,
+    convertMessageToHTML,
+    reactionsToEmoji,
+  },
+}
+</script>
+
+<style lang="scss">
+.Reply {
+  box-sizing: border-box;
+  text-align: left;
+  word-break: break-all;
+  display: flex;
+  padding: 5px 0;
+  // border-bottom: 1px solid #f0f0f0;
+  width: 100%;
+  font-size: 0.85em;
+  &:before {
+    content: "";
+    display: block;
+    min-width: 3px;
+    border-radius: 2px;
+    background-color: #40a688;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 5px;
+  }
+}
+</style>
