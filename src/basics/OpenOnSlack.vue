@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import messageAppLink from "../utils/messageAppLink"
 export default {
   name: "OpenOnSlack",
   props: {
@@ -20,8 +21,11 @@ export default {
   computed: {
     href() {
       const { team, channel, ts } = this.$props
-      const params = `team=${team}${channel ? "&id=" + channel : ""}${ts ? "&message=" + ts : ""}`
-      return `slack:${channel ? "channel" : "open"}?${params}`
+      return messageAppLink({
+        team,
+        channel,
+        ts,
+      })
     },
   },
   methods: {
@@ -39,18 +43,13 @@ export default {
 
 <style lang="scss">
 .OpenOnSlack {
-  border: none;
-  padding: 0;
-  margin: 0;
   cursor: pointer;
   outline: none;
-  opacity: 0.5;
   &:link {
     color: inherit;
   }
   &:hover {
     color: #0576b9;
-    opacity: 1;
   }
 }
 </style>

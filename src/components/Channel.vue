@@ -38,7 +38,18 @@
       </div>
     </transition>
     <div class="Channel_Messages">
-      <Message v-for="message in channel.messages" :key="message.ts" v-bind="message" :users="users" :emojiList="emojiList" :messages="channel.messages" :team="teamInfo.id" :channel="channelId" v-if="!message.parent_user_id"/>
+      <Message
+        v-for="message in channel.messages"
+        :key="message.ts"
+        v-bind="message"
+        :users="users"
+        :emojiList="emojiList"
+        :messages="channel.messages"
+        :team="teamInfo.id"
+        :channel="channelId"
+        v-if="!message.parent_user_id"
+        :domain="teamInfo.domain"
+      />
     </div>
   </div>
 </template>

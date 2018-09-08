@@ -4,36 +4,50 @@
       <img v-if="userIcon" :src="userIcon" class="Message_Icon">
     </div>
     <div class="Message_Content">
-      <div class="Message_Header">
-        <span class="Message_UserName">
-          {{userName}}
-        </span>
-        <span class="Message_Timestamp">
-          {{timestamp}}
-        </span>
-        <OpenOnSlack
-          :team="team"
-          :channel="channel"
-          :ts="ts"
-        />
-      </div>
-      <div class="Message_Text"
-        v-html="bodyHTML"
-      >
-      </div>
-      <div>
+      <div class="Message_Main">
+        <div class="Message_Header">
+          <span class="Message_UserName">
+            {{userName}}
+          </span>
+          <span class="Message_Timestamp">
+            {{timestamp}}
+          </span>
+        </div>
+        <div class="Message_Text"
+          v-html="bodyHTML"
+        >
+        </div>
         <Attachment v-for="attachment in attachments" v-bind="attachment" :key="attachment.id"/>
-      </div>
-      <div class="Message_Reactions"
-        v-if="reactions && reactions.length !== 0"
-      >
-        <Reaction
-          v-for="(reaction, index) in reactionsToEmoji(reactions, emojiList)"
-          :key="index"
-          v-bind="reaction"
-          :usersList="users"
-          :emojiList="emojiList"
-        />
+        <div class="Message_Reactions"
+          v-if="reactions && reactions.length !== 0"
+        >
+          <Reaction
+            v-for="(reaction, index) in reactionsToEmoji(reactions, emojiList)"
+            :key="index"
+            v-bind="reaction"
+            :usersList="users"
+            :emojiList="emojiList"
+          />
+        </div>
+        <div class="Message_Actions">
+          <div class="Message_Action">
+            😄
+          </div>
+          <div class="Message_Action">
+            <CopyMessageLink
+              :domain="domain"
+              :channel="channel"
+              :ts="ts"
+            />
+          </div>
+          <div class="Message_Action">
+            <OpenOnSlack
+              :team="team"
+              :channel="channel"
+              :ts="ts"
+            />
+          </div>
+        </div>
       </div>
       <div
         class="Message_Replies"
@@ -56,6 +70,7 @@ import convUserName from "../utils/message/convUserName"
 import convertMessageToHTML from "../utils/message/convertMessageToHTML"
 import reactionsToEmoji from "../utils/message/reactionsToEmoji"
 import OpenOnSlack from "../basics/OpenOnSlack.vue"
+import CopyMessageLink from "../basics/CopyMessageLink.vue"
 export default {
   name: "Message",
   components: {
@@ -63,6 +78,7 @@ export default {
     Reply,
     Reaction,
     OpenOnSlack,
+    CopyMessageLink,
   },
   props: {
     users: Object,
@@ -96,6 +112,7 @@ export default {
     subscribed: Boolean,
     last_read: String,
     unread_count: Number,
+    domain: String,
   },
   computed: {
     userName() {
@@ -119,6 +136,9 @@ export default {
     },
   },
   methods: {
+    copyLink() {
+      this.$emit("copyLink", this.$props)
+    },
     convTimestamp,
     convUserIcon,
     convUserName,
@@ -135,8 +155,9 @@ export default {
   word-break: break-all;
   display: flex;
   padding: 5px;
-  border-bottom: 1px solid #f0f0f0;
+  // border-bottom: 1px solid #f0f0f0;
   width: 100%;
+  position: relative;
   &_Content {
     flex-grow: 1;
     width: calc(100% - 2.75em);
@@ -242,6 +263,22 @@ export default {
     display: flex;
     align-items: center;
     margin-top: 3px;
+  }
+  &_Actions {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: -10px;
+    border: 1px solid #005e99;
+    padding: 1px 2px;
+    justify-content: center;
+    align-items: center;
+  }
+  &_Main:hover {
+    background-color: #f9f9f9;
+  }
+  &_Main:hover &_Actions {
+    display: flex;
   }
 }
 </style>
