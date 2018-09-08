@@ -5,7 +5,6 @@ import types from "../store/types"
 export default {
   name: "Team",
   props: {
-    team_id: String,
     access_token: String,
     channelsList: Array,
     usersList: Array,
@@ -21,9 +20,8 @@ export default {
   },
   methods: {
     onSelectChannel({ channelId }) {
-      this.$store.commit(types.ADD_CHANNEL, {
+      this.$emit(types.ADD_CHANNEL, {
         channelId,
-        team_id: this.team_id,
       })
     },
   },

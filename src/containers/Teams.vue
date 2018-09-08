@@ -2,6 +2,7 @@
 import { mapState } from "vuex"
 import Team from "../components/Team.vue"
 import { map } from "lodash"
+import types from "../store/types"
 export default {
   name: "Teams",
   computed: {
@@ -12,11 +13,27 @@ export default {
       <div class="Teams">
         {map(this.teams, (team, team_id) =>
           h(Team, {
-            props: { ...team, team_id },
+            props: team,
+            on: {
+              [types.ADD_CHANNEL]: ({ channelId }) => {
+                this[types.ADD_CHANNEL]({
+                  channelId,
+                  team_id,
+                })
+              },
+            },
           }),
         )}
       </div>
     )
+  },
+  methods: {
+    [types.ADD_CHANNEL]({ channelId, team_id }) {
+      this.$store.commit(types.ADD_CHANNEL, {
+        channelId,
+        team_id,
+      })
+    },
   },
 }
 </script>

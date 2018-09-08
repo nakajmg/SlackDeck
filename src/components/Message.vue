@@ -17,7 +17,11 @@
           v-html="bodyHTML"
         >
         </div>
-        <Attachment v-for="attachment in attachments" v-bind="attachment" :key="attachment.id"/>
+        <Attachment
+          v-for="attachment in attachments"
+          v-bind="attachment"
+          :key="attachment.id"
+        />
         <div class="Message_Reactions"
           v-if="reactions && reactions.length !== 0"
         >
@@ -31,7 +35,7 @@
         </div>
         <div class="Message_Actions">
           <div class="Message_Action">
-            😄
+            
           </div>
           <div class="Message_Action">
             <CopyMessageLink
