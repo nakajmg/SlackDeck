@@ -20,6 +20,19 @@ export default {
     channels(state) {
       return zipObject(map(state.channelsList, ({ id }) => id), state.channelsList)
     },
+    customEmojis(state) {
+      return map(state.emojiList, (imageUrl, name) => {
+        return {
+          name,
+          short_names: [name],
+          text: "",
+          emoticons: [],
+          keywords: ["reacji", "slack"],
+          imageUrl,
+          custom: true,
+        }
+      })
+    },
   },
   mutations: {
     [types.SET_TEAM_INFO](state, { access_token, teamInfo, channelsList, usersList, emojiList }) {
