@@ -8,12 +8,14 @@
         <span class="Message_UserName">
           {{userName}}
         </span>
-        <span @click="openOnSlack">
-          slack
-        </span>
         <span class="Message_Timestamp">
           {{timestamp}}
         </span>
+        <OpenOnSlack
+          :team="team"
+          :channel="channel"
+          :ts="ts"
+        />
       </div>
       <div class="Message_Text"
         v-html="bodyHTML"
@@ -53,13 +55,14 @@ import convUserIcon from "../utils/message/convUserIcon"
 import convUserName from "../utils/message/convUserName"
 import convertMessageToHTML from "../utils/message/convertMessageToHTML"
 import reactionsToEmoji from "../utils/message/reactionsToEmoji"
-import openOnSlack from "../utils/openOnSlack"
+import OpenOnSlack from "../basics/OpenOnSlack.vue"
 export default {
   name: "Message",
   components: {
     Attachment,
     Reply,
     Reaction,
+    OpenOnSlack,
   },
   props: {
     users: Object,
@@ -121,13 +124,6 @@ export default {
     convUserName,
     convertMessageToHTML,
     reactionsToEmoji,
-    openOnSlack() {
-      openOnSlack({
-        team: this.team,
-        channel: this.channel,
-        ts: this.ts,
-      })
-    },
   },
 }
 </script>
@@ -208,7 +204,7 @@ export default {
   &_Header {
     font-size: 0.8em;
     display: flex;
-    align-items: bottom;
+    align-items: center;
   }
   &_Icon {
     height: 100%;
@@ -224,6 +220,7 @@ export default {
     margin-left: auto;
     font-size: 0.85em;
     opacity: 0.8;
+    margin-right: 5px;
   }
   &_Blockquote {
     position: relative;
