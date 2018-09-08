@@ -35,7 +35,9 @@
         </div>
         <div class="Message_Actions">
           <div class="Message_Action">
-            
+            <span @click="addReaction">
+              😄
+            </span>
           </div>
           <div class="Message_Action">
             <CopyMessageLink
@@ -64,7 +66,8 @@
 </template>
 
 <script>
-import includes from "lodash/includes"
+import types from "../store/types"
+import { includes } from "lodash"
 import Attachment from "./Message/Attachment.vue"
 import Reply from "./Message/Reply.vue"
 import Reaction from "./Message/Reaction.vue"
@@ -142,6 +145,12 @@ export default {
   methods: {
     copyLink() {
       this.$emit("copyLink", this.$props)
+    },
+    addReaction() {
+      this.$emit("showEmojiPicker", {
+        type: types.REACTION_TO_MESSAGE,
+        ts: this.ts,
+      })
     },
     convTimestamp,
     convUserIcon,

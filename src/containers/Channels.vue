@@ -14,7 +14,7 @@ export default {
         {this.channelsOrder.map(({ channelId, team_id }) => {
           const { channelsList, teamInfo, emojiList } = this.teams[team_id]
           const channelName = this.getChannelName({ channelId, channelsList })
-
+          const customEmojis = this.$store.getters[`${team_id}/customEmojis`]
           return h(Channel, {
             class: "Channels_Channel",
             key: channelId,
@@ -25,6 +25,7 @@ export default {
               users: this.$store.getters[`${team_id}/users`],
               channel: this.channels[channelId],
               emojiList,
+              customEmojis,
               disableMoveLeft: !this.canMoveLeft({ channelId, team_id }),
               disableMoveRight: !this.canMoveRight({ channelId, team_id }),
             },
@@ -32,6 +33,7 @@ export default {
               remove: this.removeChannel,
               moveLeft: this.moveLeftChannel,
               moveRight: this.moveRightChannel,
+              [types.REACTION_TO_MESSAGE]: this.reactionToMessage,
             },
           })
         })}
@@ -72,6 +74,13 @@ export default {
         channel => channel.channelId === channelId && channel.team_id === team_id,
       )
       return index !== -1 && index !== 0
+    },
+    reactionToMessage({ channelId, ts, name }) {
+      this.$store.dispatch(`${channelId}/${types.REACTION_TO_MESSAGE}`, {
+        ts,
+        name,
+        channelId,
+      })
     },
   },
 }

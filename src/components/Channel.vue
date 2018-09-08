@@ -9,6 +9,19 @@
       :disableMoveRight="disableMoveRight"
       :teamInfo="teamInfo"
     />
+    <div
+      class="Channel_Picker"
+      v-if="pickerOpened"
+    >
+      <Picker
+        :custom="customEmojis"
+        :perLine="7"
+        emoji=":heart_eyes_cat:"
+        title="Pick a Emoji"
+        :sheetSize="32"
+        @select="onClickEmoji"
+      />
+    </div>
     <div class="Channel_Messages">
       <Message
         v-for="message in channel.messages"
@@ -21,6 +34,7 @@
         :channel="channelId"
         v-if="!message.parent_user_id"
         :domain="teamInfo.domain"
+        @showEmojiPicker="showEmojiPicker"
       />
     </div>
   </div>
@@ -29,6 +43,7 @@
 <script>
 import Message from "./Message.vue"
 import ChannelHeader from "./Channel/ChannelHeader.vue"
+import { Picker } from "emoji-mart-vue"
 export default {
   name: "Channel",
   props: {
@@ -38,8 +53,15 @@ export default {
     users: Object,
     channel: Object,
     emojiList: Object,
+    customEmojis: Array,
     disableMoveLeft: Boolean,
     disableMoveRight: Boolean,
+  },
+  data() {
+    return {
+      pickerOpened: false,
+      preData: null,
+    }
   },
   methods: {
     moveLeft() {
@@ -51,10 +73,29 @@ export default {
     remove() {
       this.$emit("remove", { channelId: this.channelId, team_id: this.teamInfo.id })
     },
+    showEmojiPicker({ type, ts }) {
+      this.preData = {
+        type,
+        ts,
+      }
+      this.pickerOpened = true
+    },
+    onClickEmoji(emoji) {
+      if (this.preData && this.preData.type) {
+        this.$emit(this.preData.type, {
+          ts: this.preData.ts,
+          name: emoji.id,
+          channelId: this.channelId,
+          team_id: this.team_id,
+        })
+      }
+      this.pickerOpened = false
+    },
   },
   components: {
     Message,
     ChannelHeader,
+    Picker,
   },
 }
 </script>
@@ -67,8 +108,21 @@ export default {
   max-width: 330px;
   margin-right: 5px;
   border: 1px solid #eee;
+  position: relative;
   &:last-child {
     margin-right: 0;
   }
+  &_Picker {
+    position: absolute;
+    z-index: 1;
+  }
+}
+.emoji-mart-scroll + .emoji-mart-bar {
+  height: 50px;
+}
+.emoji-mart-scroll + .emoji-mart-bar .emoji-mart-preview {
+  height: 100%;
+  transform: scale(0.7);
+  // transform-origin-y: 100%;
 }
 </style>

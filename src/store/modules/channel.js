@@ -119,5 +119,12 @@ export default {
         messages: reverse(messages),
       })
     },
+    async [types.REACTION_TO_MESSAGE]({ state }, { channelId, ts, name }) {
+      await api(state.access_token).reactions.add({
+        channel: channelId,
+        timestamp: ts,
+        name,
+      })
+    },
   },
 }

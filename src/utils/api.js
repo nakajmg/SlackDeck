@@ -1,5 +1,6 @@
 import axios from "axios"
 import extendScoket from "./extendSocket"
+import qs from "query-string"
 const ENTRY_POINT = strings => `https://slack.com/api${strings[0]}`
 
 export default token => {
@@ -12,6 +13,21 @@ export default token => {
         },
       })
       .then(res => res.data)
+  }
+  // axios.defaults.headers.common['Access-Control-Request-Headers'] = null
+  // axios.defaults.headers.common['Access-Control-Request-Method'] = null
+  const _post = (url, data = {}) => {
+    return axios({
+      method: "POST",
+      url,
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      params: {
+        token,
+      },
+      data: qs.stringify(data),
+    })
   }
 
   return {
@@ -64,6 +80,24 @@ export default token => {
         const url = ENTRY_POINT`/emoji.list`
         const res = await _get(url)
         return res.emoji
+      },
+    },
+    reactions: {
+      async add({ name, channel, timestamp }) {
+        const url = ENTRY_POINT`/reactions.add`
+        await _post(url, {
+          name,
+          channel,
+          timestamp,
+        })
+      },
+      async remove({ name, channel, timestamp }) {
+        const url = ENTRY_POINT`/reactions.remove`
+        await _post(url, {
+          name,
+          channel,
+          timestamp,
+        })
       },
     },
     bots: {

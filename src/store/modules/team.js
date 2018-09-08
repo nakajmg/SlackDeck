@@ -2,6 +2,7 @@ import deepFreeze from "deep-freeze"
 import types from "../types"
 import api from "../../utils/api"
 import { map, zipObject } from "lodash"
+import isURL from "../../utils/isURL"
 export default {
   namespaced: true,
   state() {
@@ -22,6 +23,11 @@ export default {
     },
     customEmojis(state) {
       return map(state.emojiList, (imageUrl, name) => {
+        // aliasが貼られてる絵文字は alias:hoge な形
+        if (!isURL(imageUrl)) {
+          const alias = imageUrl.split(":")[1]
+          imageUrl = state.emojiList[alias]
+        }
         return {
           name,
           short_names: [name],
