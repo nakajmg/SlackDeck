@@ -31,6 +31,7 @@ export default {
   methods: {
     openOnSlack() {
       const iframe = document.createElement("iframe")
+      iframe.classList.add("OpenOnSlack_HiddenFrame")
       iframe.src = this.href
       document.body.appendChild(iframe)
       setTimeout(function() {
@@ -51,6 +52,9 @@ export default {
   }
   &:hover {
     color: #0576b9;
+  }
+  &_HiddenFrame {
+    display: none;
   }
 }
 </style>
