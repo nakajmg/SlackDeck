@@ -45,7 +45,8 @@ export default {
 .OpenOnSlack {
   cursor: pointer;
   outline: none;
-  &:link {
+  &:link,
+  &:visited {
     color: inherit;
   }
   &:hover {

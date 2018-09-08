@@ -37,7 +37,8 @@ export default {
 .CopyMessageLink {
   cursor: pointer;
   outline: none;
-  &:link {
+  &:link,
+  &:visited {
     color: inherit;
   }
   &:hover {
