@@ -1,7 +1,7 @@
 import types from "../types"
 import api from "../../utils/api"
 import deepFreeze from "deep-freeze"
-import { reverse, cloneDeep, findIndex, reject } from "lodash"
+import { reverse, cloneDeep, findIndex, reject, includes } from "lodash"
 export default {
   namespaced: true,
   state() {
@@ -88,6 +88,7 @@ export default {
       }
       const prevReaction = prevMessage.reactions[reactionIndex]
       prevReaction.count = prevReaction.count + 1
+      if (includes(prevReaction.users, message.user)) return
       prevReaction.users.push(message.user)
       return state.messages.splice(index, 1, deepFreeze(prevMessage))
     },
@@ -104,7 +105,7 @@ export default {
       } else {
         prevMessage.reactions[reactionIndex].users = reject(
           prevMessage.reactions[reactionIndex].users,
-          message.user,
+          user => user === message.user,
         )
       }
       return state.messages.splice(index, 1, deepFreeze(prevMessage))
@@ -121,6 +122,13 @@ export default {
     },
     async [types.REACTION_TO_MESSAGE]({ state }, { channelId, ts, name }) {
       await api(state.access_token).reactions.add({
+        channel: channelId,
+        timestamp: ts,
+        name,
+      })
+    },
+    async [types.REACTION_TO_REMOVE]({ state }, { channelId, ts, name }) {
+      await api(state.access_token).reactions.remove({
         channel: channelId,
         timestamp: ts,
         name,

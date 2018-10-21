@@ -31,11 +31,13 @@
             v-bind="reaction"
             :usersList="users"
             :emojiList="emojiList"
+            :user_id="user_id"
+            v-on="events"
           />
         </div>
         <div class="Message_Actions">
           <div class="Message_Action">
-            <span @click="addReaction">
+            <span @click="showEmojiPicker">
               😄
             </span>
           </div>
@@ -59,7 +61,15 @@
         class="Message_Replies"
         v-if="replies.length !== 0"
       >
-        <Reply v-for="reply in replyMessages" :key="reply.ts" v-bind="reply" :users="users" :emojiList="emojiList"/>
+        <Reply
+          v-for="reply in replyMessages"
+          :key="reply.ts"
+          v-bind="reply"
+          :users="users"
+          :emojiList="emojiList"
+          v-on="events"
+          :user_id="user_id"
+        />
       </div>
     </div>
   </div>
@@ -67,6 +77,7 @@
 
 <script>
 import types from "../store/types"
+import events from "../variables/events"
 import { includes } from "lodash"
 import Attachment from "./Message/Attachment.vue"
 import Reply from "./Message/Reply.vue"
@@ -88,6 +99,7 @@ export default {
     CopyMessageLink,
   },
   props: {
+    user_id: String,
     users: Object,
     emojiList: Object,
     type: String,
@@ -141,15 +153,27 @@ export default {
         return includes(repliesTs, ts)
       })
     },
+    events() {
+      return {
+        [events.CLICK_REACTION]: this.onClickReaction,
+      }
+    },
   },
   methods: {
     copyLink() {
       this.$emit("copyLink", this.$props)
     },
-    addReaction() {
+    showEmojiPicker() {
       this.$emit("showEmojiPicker", {
         type: types.REACTION_TO_MESSAGE,
         ts: this.ts,
+      })
+    },
+    onClickReaction({ name, ts, reacted }) {
+      this.$emit(events.CLICK_REACTION, {
+        name,
+        ts: ts || this.ts,
+        reacted,
       })
     },
     convTimestamp,
@@ -210,6 +234,7 @@ export default {
     }
     p {
       margin: 0;
+      white-space: pre-wrap;
     }
     pre {
       background: #f9f9f9;

@@ -3,10 +3,11 @@ import { mapState } from "vuex"
 import Channel from "../components/Channel.vue"
 import { find, findIndex } from "lodash"
 import types from "../store/types"
+import events from "../variables/events"
 export default {
   name: "Channels",
   computed: {
-    ...mapState(["channelsOrder", "teams", "channels"]),
+    ...mapState(["channelsOrder", "teams", "channels", "tokens"]),
   },
   render(h) {
     return (
@@ -14,11 +15,14 @@ export default {
         {this.channelsOrder.map(({ channelId, team_id }) => {
           const { channelsList, teamInfo, emojiList } = this.teams[team_id]
           const channelName = this.getChannelName({ channelId, channelsList })
+          const token = this.tokens.find(token => token.team_id === team_id)
+          const user_id = token.user_id
           const customEmojis = this.$store.getters[`${team_id}/customEmojis`]
           return h(Channel, {
             class: "Channels_Channel",
             key: channelId,
             props: {
+              user_id,
               teamInfo,
               channelId,
               channelName,
@@ -34,6 +38,7 @@ export default {
               moveLeft: this.moveLeftChannel,
               moveRight: this.moveRightChannel,
               [types.REACTION_TO_MESSAGE]: this.reactionToMessage,
+              [events.CLICK_REACTION]: this.reactionToMessage,
             },
           })
         })}
@@ -75,8 +80,9 @@ export default {
       )
       return index !== -1 && index !== 0
     },
-    reactionToMessage({ channelId, ts, name }) {
-      this.$store.dispatch(`${channelId}/${types.REACTION_TO_MESSAGE}`, {
+    reactionToMessage({ channelId, ts, name, reacted }) {
+      const type = reacted ? types.REACTION_TO_REMOVE : types.REACTION_TO_MESSAGE
+      this.$store.dispatch(`${channelId}/${type}`, {
         ts,
         name,
         channelId,

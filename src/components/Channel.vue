@@ -27,6 +27,7 @@
         v-for="message in channel.messages"
         :key="message.ts"
         v-bind="message"
+        :user_id="user_id"
         :users="users"
         :emojiList="emojiList"
         :messages="channel.messages"
@@ -35,6 +36,7 @@
         v-if="!message.parent_user_id"
         :domain="teamInfo.domain"
         @showEmojiPicker="showEmojiPicker"
+        v-on="events.reaction"
       />
     </div>
   </div>
@@ -44,9 +46,11 @@
 import Message from "./Message.vue"
 import ChannelHeader from "./Channel/ChannelHeader.vue"
 import { Picker } from "emoji-mart-vue"
+import events from "../variables/events"
 export default {
   name: "Channel",
   props: {
+    user_id: String,
     teamInfo: Object,
     channelId: String,
     channelName: String,
@@ -62,6 +66,15 @@ export default {
       pickerOpened: false,
       preData: null,
     }
+  },
+  computed: {
+    events() {
+      return {
+        reaction: {
+          [events.CLICK_REACTION]: this.onClickReaction,
+        },
+      }
+    },
   },
   methods: {
     moveLeft() {
@@ -90,6 +103,14 @@ export default {
         })
       }
       this.pickerOpened = false
+    },
+    onClickReaction({ name, ts, reacted }) {
+      this.$emit(events.CLICK_REACTION, {
+        channelId: this.channelId,
+        name,
+        ts,
+        reacted,
+      })
     },
   },
   components: {

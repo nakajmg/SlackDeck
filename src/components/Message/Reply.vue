@@ -26,6 +26,8 @@
           v-bind="reaction"
           :emojiList="emojiList"
           :usersList="users"
+          v-on="events"
+          :user_id="user_id"
         /> 
       </div>
     </div>
@@ -39,6 +41,7 @@ import convUserIcon from "../../utils/message/convUserIcon"
 import convUserName from "../../utils/message/convUserName"
 import reactionsToEmoji from "../../utils/message/reactionsToEmoji"
 import convertMessageToHTML from "../../utils/message/convertMessageToHTML"
+import events from "../../variables/events"
 import Reaction from "./Reaction.vue"
 export default {
   name: "Reply",
@@ -60,6 +63,14 @@ export default {
     },
     users: Object,
     emojiList: Object,
+    user_id: String,
+  },
+  computed: {
+    events() {
+      return {
+        [events.CLICK_REACTION]: this.onClickReaction,
+      }
+    },
   },
   methods: {
     convTimestamp,
@@ -67,6 +78,14 @@ export default {
     convUserName,
     convertMessageToHTML,
     reactionsToEmoji,
+    onClickReaction({ name, reacted }) {
+      console.log(name, reacted)
+      this.$emit(events.CLICK_REACTION, {
+        name,
+        ts: this.ts,
+        reacted,
+      })
+    },
   },
 }
 </script>
