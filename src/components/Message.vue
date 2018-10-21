@@ -9,6 +9,12 @@
           <span class="Message_UserName">
             {{userName}}
           </span>
+          <span class="Message_Status" v-if="status" :title="status.text">
+            <span v-if="status.emoji.emoji">
+              {{status.emoji.emoji}}
+            </span>
+            <img :src="status.emoji.src" v-if="status.emoji.src" class="Message_StatusEmoji">
+          </span>
           <span class="Message_Timestamp">
             {{timestamp}}
           </span>
@@ -87,6 +93,7 @@ import convUserIcon from "../utils/message/convUserIcon"
 import convUserName from "../utils/message/convUserName"
 import convertMessageToHTML from "../utils/message/convertMessageToHTML"
 import reactionsToEmoji from "../utils/message/reactionsToEmoji"
+import emojify from "../utils/message/emojify"
 import OpenOnSlack from "../basics/OpenOnSlack.vue"
 import CopyMessageLink from "../basics/CopyMessageLink.vue"
 export default {
@@ -156,6 +163,16 @@ export default {
     events() {
       return {
         [events.CLICK_REACTION]: this.onClickReaction,
+      }
+    },
+    status() {
+      const user = this.users[this.user]
+      if (!user) return
+      const profile = user.profile
+      const emoji = emojify(profile.status_emoji, this.emojiList)
+      return {
+        emoji,
+        text: profile.status_text,
       }
     },
   },
@@ -273,7 +290,15 @@ export default {
   }
   &_UserName {
     font-weight: 600;
-    margin-right: 1em;
+    margin-right: 0.5em;
+  }
+  &_Status {
+    font-size: 0.7em;
+    display: inline-flex;
+    align-items: center;
+  }
+  &_StatusEmoji {
+    height: 1.4em;
   }
   &_Timestamp {
     margin-left: auto;

@@ -21,6 +21,7 @@ export default function handleSocket(socket) {
         case "reaction_added":
         case "reaction_removed":
         case "pref_change":
+        case "user_change":
           return handler({ ...event, ...{ data } })
         default:
           return

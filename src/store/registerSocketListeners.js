@@ -34,5 +34,9 @@ export default (socket, { state, team_id, commit, dispatch }) => {
     console.log("reaction remove", message)
     commit(`${message.item.channel}/${types.REMOVE_REACTION}`, { message })
   })
+
+  socket.on("user_change", ({ data: message }) => {
+    console.log("user change", message)
+  })
   return socket
 }
