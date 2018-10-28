@@ -34,7 +34,9 @@
       </div>
     </div>
     <div class="Attachment_Image" v-if="image_url">
-      <img :src="image_url" :width="image_width" :height="image_height">
+      <a class="Attachment_ImageLink" :href="image_url" target="_blank">
+        <img :src="image_url">
+      </a>
     </div>
   </div>
 </template>
@@ -189,10 +191,14 @@ export default {
   &_Image {
     margin-top: 5px;
     img {
+      max-width: 100%;
       box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
       border-radius: 4px;
       display: block;
     }
+  }
+  &_ImageLink {
+    display: inline-block;
   }
 }
 </style>

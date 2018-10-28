@@ -143,6 +143,7 @@ export default {
     overflow: auto;
     max-height: 100%;
     padding-top: 1em;
+    padding-bottom: 1em;
   }
   &:last-child {
     margin-right: 0;

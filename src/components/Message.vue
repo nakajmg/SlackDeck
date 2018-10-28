@@ -28,6 +28,11 @@
           v-bind="attachment"
           :key="attachment.id"
         />
+        <File
+          v-for="file in files"
+          v-bind="file"
+          :key="file.id"
+        />
         <div class="Message_Reactions"
           v-if="reactions && reactions.length !== 0"
         >
@@ -92,6 +97,7 @@ import types from "../store/types"
 import events from "../variables/events"
 import { includes } from "lodash"
 import Attachment from "./Message/Attachment.vue"
+import File from "./Message/File.vue"
 import Reply from "./Message/Reply.vue"
 import Reaction from "./Message/Reaction.vue"
 import convTimestamp from "../utils/message/convTimestamp"
@@ -106,6 +112,7 @@ export default {
   name: "Message",
   components: {
     Attachment,
+    File,
     Reply,
     Reaction,
     OpenOnSlack,
@@ -122,6 +129,7 @@ export default {
     thread_ts: String,
     parent_user_id: String,
     attachments: Array,
+    files: Array,
     edited: Object,
     reactions: {
       type: Array,
@@ -242,6 +250,7 @@ export default {
       font-size: 1.4em;
     }
     a {
+      font-size: 0.9em;
       color: #0576b9;
       &:link {
         color: #0576b9;
@@ -346,6 +355,9 @@ export default {
     background-color: #fff;
     text-align: center;
     border-radius: 3px;
+    &:hover {
+      box-shadow: 1px 1px 1px -1px rgba(0, 0, 0, 0.8);
+    }
   }
   &_Action {
     color: #ababab;

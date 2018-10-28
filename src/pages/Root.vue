@@ -41,6 +41,7 @@ export default {
 <style>
 html,
 body {
+  overflow: hidden;
   height: 100vh;
   margin: 0 auto;
   padding: 0;
