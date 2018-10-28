@@ -24,13 +24,16 @@
         >
           <span class="el-icon-arrow-left"></span>
         </button>
+        <button class="ChannelHeader_Delete" @click="onClickRemove">
+          <span class="el-icon-delete"></span>
+        </button>
         <button class="ChannelHeader_MoveRight"
           @click="onClickMoveRight"
           :disabled="disableMoveRight"
         >
           <span class="el-icon-arrow-right"></span>
         </button>
-        <button class="ChannelHeader_Remove" @click="onClickRemove">
+        <button class="ChannelHeader_Close" @click="onClickMenu">
           <span class="el-icon-close"></span>
         </button>
       </div>
@@ -72,6 +75,7 @@ export default {
 
 <style lang="scss">
 .ChannelHeader {
+  position: relative;
   &_Header {
     padding: 5px;
     border-bottom: 1px solid #eee;
@@ -114,19 +118,26 @@ export default {
     }
   }
   &_Controls {
+    position: absolute;
+    z-index: 1;
     margin-left: auto;
     display: flex;
     align-items: center;
     padding: 5px;
     border-bottom: 1px solid #eee;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
   }
-  &_Remove,
+  &_Delete,
+  &_Close,
   &_MoveLeft,
   &_MoveRight {
     font-size: 1.2em;
     border: none;
-    margin: none;
-    padding: none;
+    margin: 0;
+    padding: 0;
     cursor: pointer;
     &:hover {
       color: #0576b9;
@@ -135,8 +146,11 @@ export default {
       pointer-events: none;
     }
   }
-  &_Remove {
+  &_Close {
     margin-left: auto;
+  }
+  &_Delete {
+    color: tomato;
   }
 }
 .slide-fade-enter-active,

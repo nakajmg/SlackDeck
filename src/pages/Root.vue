@@ -23,7 +23,6 @@ export default {
 
 <style lang="scss" scoped>
 .RootPage {
-  box-sizing: border-box;
   padding: 5px;
   display: grid;
   height: 100%;
@@ -49,6 +48,9 @@ body {
   height: 100vh;
   margin: 0 auto;
   padding: 0;
+}
+* {
+  box-sizing: border-box;
 }
 #app {
   height: 100%;
