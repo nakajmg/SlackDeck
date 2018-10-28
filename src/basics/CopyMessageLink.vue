@@ -3,7 +3,6 @@
     class="CopyMessageLink"
     @click.prevent="copyMessageLink"
     :href="href"
-    title="Copy Link"
   >
     <FontAwesomeIcon icon="link"/>
   </a>

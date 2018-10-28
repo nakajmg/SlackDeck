@@ -43,23 +43,29 @@
         </div>
         <div class="Message_Actions">
           <div class="Message_Action">
-            <span @click="showEmojiPicker">
-              😄
-            </span>
+            <el-tooltip content="Add reaction" placement="top" popper-class="Message_Tooltip">
+              <span @click="showEmojiPicker">
+                <FontAwesomeIcon icon="grin-squint"></FontAwesomeIcon>
+              </span>
+            </el-tooltip>
           </div>
           <div class="Message_Action">
-            <CopyMessageLink
-              :domain="domain"
-              :channel="channel"
-              :ts="ts"
-            />
+            <el-tooltip content="Copy link" placement="top" popper-class="Message_Tooltip">
+              <CopyMessageLink
+                :domain="domain"
+                :channel="channel"
+                :ts="ts"
+              />
+            </el-tooltip>
           </div>
           <div class="Message_Action">
-            <OpenOnSlack
-              :team="team"
-              :channel="channel"
-              :ts="ts"
-            />
+            <el-tooltip content="Open on Slack.app" placement="top" popper-class="Message_Tooltip">
+              <OpenOnSlack
+                :team="team"
+                :channel="channel"
+                :ts="ts"
+              />
+            </el-tooltip>
           </div>
         </div>
       </div>
@@ -332,10 +338,31 @@ export default {
     position: absolute;
     right: 10px;
     top: -10px;
-    border: 1px solid #005e99;
-    padding: 1px 2px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    // padding: 1px 2px;
     justify-content: center;
     align-items: center;
+    font-size: 0.8em;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 3px;
+  }
+  &_Action {
+    color: #ababab;
+    padding: 3px;
+    width: 25px;
+    height: 25px;
+    &:hover {
+      cursor: pointer;
+      color: #005e99;
+    }
+  }
+  &_Action + &_Action {
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  &_Tooltip {
+    padding: 8px;
+    font-size: 10px;
   }
   &_Main:hover {
     background-color: #f9f9f9;

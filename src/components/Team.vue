@@ -78,6 +78,7 @@ export default {
   }
   &_Signout {
     margin-left: auto;
+    margin-right: 3px;
     opacity: 0.5;
     font-size: 1.2em;
     &:hover {

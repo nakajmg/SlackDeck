@@ -142,6 +142,7 @@ export default {
     grid-row: 2;
     overflow: auto;
     max-height: 100%;
+    padding-top: 1em;
   }
   &:last-child {
     margin-right: 0;

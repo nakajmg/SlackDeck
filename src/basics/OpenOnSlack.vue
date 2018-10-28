@@ -3,7 +3,6 @@
     class="OpenOnSlack"
     @click.prevent="openOnSlack"
     :href="href"
-    title="Open on Slack App"
   >
     <FontAwesomeIcon :icon="['fab', 'slack-hash']"/>
   </a>
