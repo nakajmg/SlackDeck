@@ -22,7 +22,12 @@ export default {
           <div>
             <div class="Team_Name">
               <img src={this.teamInfo.icon.image_68} class="Team_Icon" />
-              {this.teamInfo.name}
+              <span>{this.teamInfo.name}</span>
+              <span class="Team_Signout">
+                <el-tooltip content="Signout" placement="right">
+                  <font-awesome-icon icon="sign-out-alt" />
+                </el-tooltip>
+              </span>
             </div>
             <ChannelsList
               class="Team_ChannelsList"
@@ -70,6 +75,15 @@ export default {
     margin-bottom: 5px;
     display: flex;
     align-items: center;
+  }
+  &_Signout {
+    margin-left: auto;
+    opacity: 0.5;
+    font-size: 1.2em;
+    &:hover {
+      cursor: pointer;
+      color: #0576b9;
+    }
   }
 }
 </style>
