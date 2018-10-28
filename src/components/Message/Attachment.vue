@@ -1,8 +1,9 @@
 <template>
   <div class="Attachment">
     <div class="Attachment_Pretext">{{pretext}}</div>
-    <div class="Attachment_Content">
+    <div class="Attachment_Content" v-if="author_name">
       <div class="Attachment_Border"
+        v-if="color"
         :style="{backgroundColor:'#' + color}"
       >
       </div>
@@ -32,6 +33,9 @@
         </div>
       </div>
     </div>
+    <div class="Attachment_Image" v-if="image_url">
+      <img :src="image_url" :width="image_width" :height="image_height">
+    </div>
   </div>
 </template>
 
@@ -53,6 +57,11 @@ export default {
     title: String,
     title_link: String,
     pretext: String,
+    image_url: String,
+    image_width: Number,
+    image_height: Number,
+    from_url: String,
+    original_url: String,
   },
   computed: {
     bodyHTML() {
@@ -175,6 +184,14 @@ export default {
           text-decoration: underline;
         }
       }
+    }
+  }
+  &_Image {
+    margin-top: 5px;
+    img {
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      display: block;
     }
   }
 }
