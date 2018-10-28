@@ -1,6 +1,7 @@
 <template>
   <div class="Channel">
     <ChannelHeader
+      class="Channel_Header"
       @moveLeft="moveLeft"
       @moveRight="moveRight"
       @remove="remove"
@@ -9,19 +10,6 @@
       :disableMoveRight="disableMoveRight"
       :teamInfo="teamInfo"
     />
-    <div
-      class="Channel_Picker"
-      v-if="pickerOpened"
-    >
-      <Picker
-        :custom="customEmojis"
-        :perLine="7"
-        emoji=":heart_eyes_cat:"
-        title="Pick a Emoji"
-        :sheetSize="32"
-        @select="onClickEmoji"
-      />
-    </div>
     <div class="Channel_Messages">
       <Message
         v-for="message in channel.messages"
@@ -37,6 +25,19 @@
         :domain="teamInfo.domain"
         @showEmojiPicker="showEmojiPicker"
         v-on="events.reaction"
+      />
+    </div>
+    <div
+      class="Channel_Picker"
+      v-if="pickerOpened"
+    >
+      <Picker
+        :custom="customEmojis"
+        :perLine="7"
+        emoji=":heart_eyes_cat:"
+        title="Pick a Emoji"
+        :sheetSize="32"
+        @select="onClickEmoji"
       />
     </div>
   </div>
@@ -130,6 +131,17 @@ export default {
   margin-right: 5px;
   border: 1px solid #eee;
   position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 40px 1fr;
+  &_Header {
+    grid-row: 1;
+  }
+  &_Messages {
+    grid-row: 2;
+    overflow: auto;
+    max-height: 100%;
+  }
   &:last-child {
     margin-right: 0;
   }

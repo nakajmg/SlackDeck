@@ -1,6 +1,6 @@
 import Vue from "vue"
 import Router from "vue-router"
-import Root from "./pages/Root"
+import Root from "./pages/Root.vue"
 
 Vue.use(Router)
 

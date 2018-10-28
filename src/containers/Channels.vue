@@ -94,5 +94,7 @@ export default {
 <style lang="scss" scoped>
 .Channels {
   display: flex;
+  height: 100%;
+  overflow: hidden;
 }
 </style>

@@ -36,6 +36,7 @@ export default (socket, { state, team_id, commit, dispatch }) => {
   })
 
   socket.on("user_change", ({ data: message }) => {
+    // ユーザのステータスが変わったときのしょりを書く。userオブジェクトが飛んでくるからそのまま差し替えればよさそう
     console.log("user change", message)
   })
   return socket
