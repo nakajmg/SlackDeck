@@ -4,12 +4,6 @@ import types from "../store/types"
 import IconMenu from "./IconMenu.vue"
 export default {
   name: "Signin",
-  props: {
-    collapse: {
-      type: Boolean,
-      default: false,
-    },
-  },
   computed: {
     redirectURI() {
       return process.env.NODE_ENV === "local"
@@ -32,16 +26,16 @@ export default {
   render() {
     return (
       <div class="Signin">
-        <a
-          class="Signin_Button"
-          href={`https://slack.com/oauth/authorize?scope=client&client_id=2320436460.419427842645&redirect_uri=${
-            this.redirectURI
-          }&state=${location.href}`}
-        >
-          <IconMenu icon="plus" collapse={this.collapse}>
-            Add team
-          </IconMenu>
-        </a>
+        <el-tooltip content="Add Team">
+          <a
+            class="Signin_Button"
+            href={`https://slack.com/oauth/authorize?scope=client&client_id=2320436460.419427842645&redirect_uri=${
+              this.redirectURI
+            }&state=${location.href}`}
+          >
+            <IconMenu icon="plus">Add team</IconMenu>
+          </a>
+        </el-tooltip>
       </div>
     )
   },

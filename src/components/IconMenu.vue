@@ -14,7 +14,7 @@ export default {
     icon: String,
     collapse: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   computed: {

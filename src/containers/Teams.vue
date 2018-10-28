@@ -6,7 +6,7 @@ import types from "../store/types"
 export default {
   name: "Teams",
   computed: {
-    ...mapState(["teams", "ui"]),
+    ...mapState(["teams"]),
   },
   render(h) {
     return (

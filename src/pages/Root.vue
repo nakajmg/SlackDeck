@@ -24,7 +24,7 @@ export default {
   height: 100%;
   margin: 0;
   grid-template-rows: 1fr;
-  grid-template-columns: 180px 1fr;
+  grid-template-columns: 42px 1fr;
   &_Sidebar {
     grid-row: 1;
     grid-column: 1;
