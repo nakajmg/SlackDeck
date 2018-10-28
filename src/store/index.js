@@ -9,6 +9,7 @@ import map from "lodash/map"
 import { includes, findIndex, cloneDeep } from "lodash"
 import deepFreeze from "deep-freeze"
 import registerSocketListeners from "./registerSocketListeners"
+import ui from "./modules/ui"
 Vue.use(Vuex)
 const sockets = new Map()
 export default new Vuex.Store({
@@ -16,6 +17,7 @@ export default new Vuex.Store({
   modules: {
     teams: {},
     channels: {},
+    ui,
   },
   mutations: {
     [types.RESTORE_FROM_LOCAL_STORAGE](state) {

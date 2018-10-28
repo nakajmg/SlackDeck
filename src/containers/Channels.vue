@@ -95,6 +95,6 @@ export default {
 .Channels {
   display: flex;
   height: 100%;
-  overflow: hidden;
+  overflow-x: auto;
 }
 </style>

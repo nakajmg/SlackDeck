@@ -6,7 +6,7 @@ import types from "../store/types"
 export default {
   name: "Teams",
   computed: {
-    ...mapState(["teams"]),
+    ...mapState(["teams", "ui"]),
   },
   render(h) {
     return (
@@ -14,6 +14,7 @@ export default {
         {map(this.teams, (team, team_id) =>
           h(Team, {
             props: team,
+            class: "Teams_Team",
             on: {
               [types.ADD_CHANNEL]: ({ channelId }) => {
                 this[types.ADD_CHANNEL]({
@@ -41,5 +42,9 @@ export default {
 <style lang="scss">
 .Teams {
   display: flex;
+  flex-direction: column;
+  &_Team + &_Team {
+    margin-top: 5px;
+  }
 }
 </style>

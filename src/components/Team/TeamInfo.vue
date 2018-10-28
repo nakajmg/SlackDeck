@@ -1,5 +1,5 @@
 <template>
-  <div v-if="teamInfo" class="TeamInfo">
+  <div v-if="teamInfo" class="TeamInfo" @click="$emit('click')">
     <img :src="teamInfo.icon.image_68" v-if="teamInfo.icon"  class="TeamInfo_Icon">
     <span class="TeamInfo_Name">
       {{teamInfo.name}}
@@ -21,7 +21,7 @@ export default {
   display: flex;
   align-items: center;
   &_Icon {
-    height: 32px;
+    height: 28px;
     width: auto;
     display: block;
     border-radius: 3px;

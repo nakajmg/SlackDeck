@@ -1,8 +1,7 @@
 <script>
 import { mapState } from "vuex"
-import Signin from "./Signin"
-import Teams from "../containers/Teams.vue"
 import Channels from "../containers/Channels.vue"
+import Sidebar from "../containers/Sidebar.vue"
 export default {
   name: "Root",
   computed: {
@@ -11,9 +10,7 @@ export default {
   render() {
     return (
       <div class="RootPage">
-        <header class="RootPage_Header">
-          {this.initialized ? <Teams /> : null} <Signin />
-        </header>
+        <Sidebar class="RootPage_Sidebar" />
         <main class="RootPage_Main">{this.initialized ? [<Channels />] : null}</main>
       </div>
     )
@@ -23,19 +20,18 @@ export default {
 
 <style lang="scss" scoped>
 .RootPage {
-  padding: 5px;
   display: grid;
   height: 100%;
   margin: 0;
-  grid-template-rows: 50px 1fr;
-  &_Header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
+  grid-template-rows: 1fr;
+  grid-template-columns: 180px 1fr;
+  &_Sidebar {
     grid-row: 1;
+    grid-column: 1;
   }
   &_Main {
-    grid-row: 2;
+    grid-row: 1;
+    grid-column: 2;
     max-height: 100%;
     overflow: hidden;
   }
@@ -48,6 +44,7 @@ body {
   height: 100vh;
   margin: 0 auto;
   padding: 0;
+  background-color: #f7fbfd;
 }
 * {
   box-sizing: border-box;

@@ -150,7 +150,9 @@ export default {
     margin-left: auto;
   }
   &_Delete {
-    color: tomato;
+    &:hover {
+      color: tomato;
+    }
   }
 }
 .slide-fade-enter-active,

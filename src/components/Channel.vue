@@ -128,12 +128,13 @@ export default {
   width: 330px;
   min-width: 330px;
   max-width: 330px;
-  margin-right: 5px;
+  margin-right: 3px;
   border: 1px solid #eee;
   position: relative;
   height: 100%;
   display: grid;
   grid-template-rows: 40px 1fr;
+  background-color: #fff;
   &_Header {
     grid-row: 1;
   }

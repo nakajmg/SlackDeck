@@ -9,12 +9,18 @@ export default {
     channelsList: Array,
     usersList: Array,
     teamInfo: Object,
+    collapse: Boolean,
   },
   render() {
     return (
       <div class="Team">
-        <TeamInfo teamInfo={this.teamInfo} class="Team_TeamInfo" />
-        <ChannelsList channelsList={this.channelsList} onSelectChannel={this.onSelectChannel} />
+        <TeamInfo teamInfo={this.teamInfo} class="Team_TeamInfo" onClick={this.openChannelSelect} />
+        <ChannelsList
+          channelsList={this.channelsList}
+          onSelectChannel={this.onSelectChannel}
+          collapse={this.collapse}
+          ref="channellist"
+        />
       </div>
     )
   },
@@ -24,15 +30,18 @@ export default {
         channelId,
       })
     },
+    openChannelSelect() {
+      this.$refs.channellist.openChannelSelect()
+    },
   },
 }
 </script>
 
 <style lang="scss">
 .Team {
-  margin-right: 5px;
+  // margin-right: 5px;
   // border: 1px solid #f0f0f0;
-  padding: 5px;
+  // padding: 5px;
   display: flex;
   align-items: center;
   &_TeamInfo {
