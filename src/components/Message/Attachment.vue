@@ -33,10 +33,24 @@
         </div>
       </div>
     </div>
-    <div class="Attachment_Image" v-if="image_url">
-      <a class="Attachment_ImageLink" :href="image_url" target="_blank">
-        <img :src="image_url">
-      </a>
+    <div class="Attachment_Service" v-if="from_url">
+      <div class="Attachment_ServiceInfo">
+        <img class="Attachment_ServiceIcon" :src="service_icon">
+        <span class="Attachment_ServiceName">{{service_name}}</span>
+      </div>
+      <div class="Attachment_ServiceTitle">
+        <a :href="title_link" target="_blank">
+          {{title}}
+        </a>
+      </div>
+      <div class="Attachment_ServiceText">
+        {{text}}
+      </div>
+      <div class="Attachment_Image" v-if="image_url">
+        <a class="Attachment_ImageLink" :href="from_url || image_url" target="_blank">
+          <img :src="image_url" :width="image_width">
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -64,6 +78,11 @@ export default {
     image_height: Number,
     from_url: String,
     original_url: String,
+    service_name: String,
+    fallback: String,
+    image_bytes: Number,
+    service_icon: String,
+    id: Number,
   },
   computed: {
     bodyHTML() {
@@ -78,6 +97,23 @@ export default {
 
 <style lang="scss">
 .Attachment {
+  a {
+    color: #0576b9;
+    &:link {
+      color: #0576b9;
+    }
+    &:active,
+    &:focus,
+    &:hover {
+      color: #005e99;
+    }
+    &:link {
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
   &_Pretext {
     font-size: 0.8em;
   }
@@ -87,23 +123,6 @@ export default {
   &_Title {
     font-weight: 700;
     font-size: 0.75em;
-    a {
-      color: #0576b9;
-      &:link {
-        color: #0576b9;
-      }
-      &:active,
-      &:focus,
-      &:hover {
-        color: #005e99;
-      }
-      &:link {
-        text-decoration: none;
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
   }
   &_Border {
     min-width: 3px;
@@ -199,6 +218,32 @@ export default {
   }
   &_ImageLink {
     display: inline-block;
+  }
+  &_Service {
+    margin-top: 10px;
+    padding-left: 10px;
+    border-left: 4px solid #e0e0e0;
+  }
+  &_ServiceInfo {
+    display: flex;
+    align-items: center;
+  }
+  &_ServiceIcon {
+    width: 16px;
+    height: auto;
+    display: block;
+    margin-right: 7px;
+  }
+  &_ServiceName {
+    font-size: 0.8em;
+    color: #6e6e6e;
+  }
+  &_ServiceTitle {
+    font-weight: 600;
+    font-size: 0.7em;
+  }
+  &_ServiceText {
+    font-size: 0.7em;
   }
 }
 </style>

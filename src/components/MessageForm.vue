@@ -10,26 +10,24 @@
     >
     </el-input>
     <div class="MessageForm_Mention">
-      <el-popover popper-class="MessageForm_Popover" v-model="popover">
-        <div>
-          <div class="MessageForm_Members">
-            <div
-              class="MessageForm_Member"
-              v-for="user in suggestedMembers" :key="user.id"
-              :value="'@' + user.name"
-              :label="user.name"
-              @click="insertMemberId(user)"
-            >
-              <span class="MessageForm_MemberIcon">
-                <img :src="user.profile.image_48">
-              </span>
-              <span class="MessageForm_MemberName">
-                {{user.name}}
-              </span>
-            </div>
+      <el-popover trigger="hover" popper-class="MessageForm_Popover" v-model="popover">
+        <div class="MessageForm_Members">
+          <div
+            class="MessageForm_Member"
+            v-for="user in suggestedMembers" :key="user.id"
+            :value="'@' + user.name"
+            :label="user.name"
+            @click="insertMemberId(user)"
+          >
+            <span class="MessageForm_MemberIcon">
+              <img :src="user.profile.image_48">
+            </span>
+            <span class="MessageForm_MemberName">
+              {{user.name}}
+            </span>
           </div>
         </div>
-        <div class="MessageForm_Atmark" slot="reference" @click="popover = true">
+        <div class="MessageForm_Atmark" slot="reference">
           @
         </div>
       </el-popover>
@@ -77,7 +75,6 @@ export default {
       this.message += "\n"
     },
     insertMemberId(user) {
-      this.popover = false
       this.selectUser(user.name)
     },
     async selectUser(value) {

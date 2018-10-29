@@ -252,6 +252,7 @@ export default {
     a {
       font-size: 0.9em;
       color: #0576b9;
+      text-decoration: none;
       &:link {
         color: #0576b9;
       }
@@ -259,6 +260,7 @@ export default {
       &:focus,
       &:hover {
         color: #005e99;
+        text-decoration: underline;
       }
     }
     [data-user] {
