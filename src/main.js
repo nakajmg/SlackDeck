@@ -6,6 +6,7 @@ import storeSubscriber from "./plugins/store"
 import "./registerServiceWorker"
 import "./plugins/element-ui"
 import "./plugins/fontawesome"
+import "./plugins/portal"
 
 Vue.config.productionTip = false
 storeSubscriber(store)

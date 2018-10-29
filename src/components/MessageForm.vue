@@ -7,10 +7,11 @@
       @compositionstart.native="onCompositionStart"
       @compositionend.native="onCompositionEnd"
       ref="input"
+      :disabled="!isInChannel"
     >
     </el-input>
     <div class="MessageForm_Emoji">
-      <el-popover trigger="hover" popper-class="MessageForm_EmojiPicker" v-model="emojiPicker">
+      <el-popover trigger="hover" popper-class="MessageForm_EmojiPicker" v-model="emojiPicker" :disabled="!isInChannel">
         <div>
           <Picker
             :custom="customEmojis"
@@ -31,10 +32,10 @@
         <div class="MessageForm_Members">
           <div
             class="MessageForm_Member"
-            v-for="user in suggestedMembers" :key="user.id"
+            v-for="user in channelMembers" :key="user.id"
             :value="'@' + user.name"
             :label="user.name"
-            @click="insertMemberId(user)"
+            @click="isInChannel && insertMemberId(user)"
           >
             <span class="MessageForm_MemberIcon">
               <img :src="user.profile.image_48">
@@ -53,7 +54,7 @@
 </template>
 
 <script>
-import { find, map } from "lodash"
+import { find } from "lodash"
 import { Picker } from "emoji-mart-vue"
 export default {
   name: "MessageForm",
@@ -68,6 +69,8 @@ export default {
     emojiList: Object,
     users: Object,
     channelInfo: Object,
+    channelMembers: Array,
+    isInChannel: Boolean,
   },
   data() {
     return {
@@ -78,11 +81,8 @@ export default {
     }
   },
   computed: {
-    suggestedMembers() {
-      return map(this.channelInfo.members, userId => this.users[userId])
-    },
     placeholder() {
-      return `#${this.channelName}`
+      return this.isInChannel ? `#${this.channelName}` : "Not in channel"
     },
     processedMessage() {
       return this.message.replace(/@([0-9a-zA-Z]*)/g, (match, $1) => {

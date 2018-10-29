@@ -38,20 +38,26 @@
       :users="users"
       :emojiList="emojiList"
       :customEmojis="customEmojis"
+      :channelMembers="channelMembers"
+      :isInChannel="isInChannel"
       @submitMessage="onSubmitMessage"
     />
     <div
-      class="Channel_Picker"
-      v-if="pickerOpened"
+      class="Channel_PickerScreen"
+      v-show="pickerOpened"
+      v-if="isInChannel"
+      @click.self="closePicker"
     >
-      <Picker
-        :custom="customEmojis"
-        :perLine="7"
-        emoji=":heart_eyes_cat:"
-        title="Pick a Emoji"
-        :sheetSize="32"
-        @select="onClickEmoji"
-      />
+      <div class="Channel_Picker">
+        <Picker
+          :custom="customEmojis"
+          :perLine="7"
+          emoji=":heart_eyes_cat:"
+          title="Pick a Emoji"
+          :sheetSize="32"
+          @select="onSelectEmoji"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -62,6 +68,7 @@ import ChannelHeader from "./Channel/ChannelHeader.vue"
 import MessageForm from "./MessageForm.vue"
 import { Picker } from "emoji-mart-vue"
 import events from "../variables/events"
+import { map, some } from "lodash"
 export default {
   name: "Channel",
   props: {
@@ -83,6 +90,12 @@ export default {
     }
   },
   computed: {
+    channelMembers() {
+      return map(this.channel.channelInfo.members, userId => this.users[userId])
+    },
+    isInChannel() {
+      return some(this.channelMembers, ({ id }) => id === this.user_id)
+    },
     events() {
       return {
         reaction: {
@@ -108,7 +121,10 @@ export default {
       }
       this.pickerOpened = true
     },
-    onClickEmoji(emoji) {
+    closePicker() {
+      this.pickerOpened = false
+    },
+    onSelectEmoji(emoji) {
       if (this.preData && this.preData.type) {
         this.$emit(this.preData.type, {
           ts: this.preData.ts,
@@ -178,9 +194,24 @@ export default {
   &:last-child {
     margin-right: 0;
   }
+  &_PickerScreen {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
   &_Picker {
     position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
     z-index: 1;
+    width: 270px;
+    height: 420px;
   }
 }
 .emoji-mart-scroll + .emoji-mart-bar {
@@ -192,15 +223,16 @@ export default {
   // transform-origin-y: 100%;
 }
 .messages-enter-active {
-  transition: all 5s;
+  transition: all 3s;
 }
 .messages-enter {
-  background-color: rgb(255, 255, 212);
+  background-color: rgb(253, 255, 218);
 }
 .messages-leave-active {
   transition: all 1s;
 }
 .messages-leave-to {
-  background-color: rgb(255, 170, 170);
+  background-color: rgb(255, 231, 231);
+  transform: translateY(-30px);
 }
 </style>

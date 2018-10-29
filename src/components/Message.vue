@@ -154,6 +154,11 @@ export default {
     unread_count: Number,
     domain: String,
   },
+  data() {
+    return {
+      emojiPicker: false,
+    }
+  },
   computed: {
     userName() {
       return this.convUserName({ user: this.user, bot_id: this.bot_id }, this.users)
