@@ -31,6 +31,14 @@
         /> 
       </div>
     </div>
+    <Actions
+      class="Reply_Actions"
+      :ts="ts"
+      :team="team"
+      :channel="channel"
+      :domain="domain"
+      @showEmojiPicker="showEmojiPicker"
+    />
   </div>
 </template>
 
@@ -43,10 +51,12 @@ import reactionsToEmoji from "../../utils/message/reactionsToEmoji"
 import convertMessageToHTML from "../../utils/message/convertMessageToHTML"
 import events from "../../variables/events"
 import Reaction from "./Reaction.vue"
+import Actions from "./Actions.vue"
 export default {
   name: "Reply",
   components: {
     Reaction,
+    Actions,
   },
   props: {
     client_msg_id: String,
@@ -64,6 +74,9 @@ export default {
     users: Object,
     emojiList: Object,
     user_id: String,
+    domain: String,
+    team: String,
+    channel: String,
   },
   computed: {
     events() {
@@ -86,12 +99,19 @@ export default {
         reacted,
       })
     },
+    showEmojiPicker({ type, ts }) {
+      this.$emit("showEmojiPicker", {
+        ts,
+        type,
+      })
+    },
   },
 }
 </script>
 
 <style lang="scss">
 .Reply {
+  position: relative;
   box-sizing: border-box;
   text-align: left;
   word-break: break-all;
@@ -109,6 +129,11 @@ export default {
     margin-top: 0px;
     margin-bottom: 0px;
     margin-right: 5px;
+  }
+  &:hover {
+    .Reply_Actions {
+      display: flex;
+    }
   }
 }
 </style>

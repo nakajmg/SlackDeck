@@ -50,8 +50,8 @@
           class="Message_Actions"
           :team="team"
           :channel="channel"
-          :ts="ts"
           :domain="domain"
+          :ts="ts"
           @showEmojiPicker="showEmojiPicker"
         />
       </div>
@@ -65,8 +65,12 @@
           v-bind="reply"
           :users="users"
           :emojiList="emojiList"
-          v-on="events"
           :user_id="user_id"
+          :team="team"
+          :channel="channel"
+          :domain="domain"
+          v-on="events"
+          @showEmojiPicker="showEmojiPicker"
         />
       </div>
     </div>
