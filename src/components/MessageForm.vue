@@ -78,10 +78,14 @@ export default {
       this.selectUser(user.name)
     },
     async selectUser(value) {
-      this.message += `@${value} `
-      await this.$nextTick()
       const input = this.$refs.input
       const textarea = input.$el.querySelector("textarea")
+      const start = textarea.selectionStart
+      const end = textarea.selectionEnd
+      let text = this.message
+      text = text.slice(0, start) + ` @${value} ` + text.slice(end)
+      this.message = text
+      await this.$nextTick()
       textarea.focus()
     },
     onEnter() {
