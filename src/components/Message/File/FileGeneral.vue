@@ -40,7 +40,7 @@ export default {
       if (kb < 1000) {
         return `${kb}kB`
       }
-      return Math.round(kb / 1000)
+      return `${Math.round(kb / 1000)}MB`
     },
     menu() {
       return [
