@@ -7,6 +7,7 @@
 <script>
 import clipboard from "clipboard-polyfill"
 import { includes } from "lodash"
+import FileGeneral from "./FileGeneral.vue"
 import FileImage from "./FileImage.vue"
 import FilePDF from "./FilePDF.vue"
 export default {
@@ -23,6 +24,8 @@ export default {
       switch (this.filetype) {
         case "pdf":
           return FilePDF
+        default:
+          return FileGeneral
       }
     },
     isImage() {
