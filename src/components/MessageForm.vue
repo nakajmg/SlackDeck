@@ -11,7 +11,7 @@
     >
     </el-input>
     <div class="MessageForm_Emoji">
-      <el-popover trigger="hover" popper-class="MessageForm_EmojiPicker" v-model="emojiPicker" :disabled="!isInChannel">
+      <el-popover trigger="click" popper-class="MessageForm_EmojiPicker" v-model="emojiPicker" :disabled="!isInChannel">
         <div>
           <Picker
             :custom="customEmojis"
