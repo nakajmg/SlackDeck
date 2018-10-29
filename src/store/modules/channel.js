@@ -9,6 +9,7 @@ export default {
       access_token: "",
       channelId: "",
       messages: [],
+      channelInfo: {},
     }
   },
   mutations: {
@@ -55,10 +56,11 @@ export default {
       if (index === -1) return
       state.messages.splice(index, 1, deepFreeze(message))
     },
-    [types.SET_INFO](state, { access_token, channelId, messages }) {
+    [types.SET_INFO](state, { access_token, channelId, messages, info }) {
       state.access_token = access_token
       state.channelId = channelId
       state.messages = state.messages.concat(deepFreeze(messages))
+      state.channelInfo = deepFreeze(info)
     },
     [types.ADD_REACTION](state, { message }) {
       const index = findIndex(state.messages, ({ ts }) => ts === message.item.ts)
@@ -113,11 +115,15 @@ export default {
   },
   actions: {
     async [types.INITIALIZE]({ commit }, { access_token, channelId }) {
-      const messages = await api(access_token).channels.history({ channelId })
+      const [messages, info] = await Promise.all([
+        await api(access_token).channels.history({ channelId }),
+        await api(access_token).channels.info({ channelId }),
+      ])
       commit(types.SET_INFO, {
         channelId,
         access_token,
         messages: reverse(messages),
+        info,
       })
     },
     async [types.REACTION_TO_MESSAGE]({ state }, { channelId, ts, name }) {

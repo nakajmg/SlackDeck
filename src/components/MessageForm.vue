@@ -6,13 +6,39 @@
       @keydown.native.shift.enter.exact.prevent="insertNewline"
       @compositionstart.native="onCompositionStart"
       @compositionend.native="onCompositionEnd"
+      ref="input"
     >
     </el-input>
+    <div class="MessageForm_Mention">
+      <el-popover popper-class="MessageForm_Popover" v-model="popover">
+        <div>
+          <div class="MessageForm_Members">
+            <div
+              class="MessageForm_Member"
+              v-for="user in suggestedMembers" :key="user.id"
+              :value="'@' + user.name"
+              :label="user.name"
+              @click="insertMemberId(user)"
+            >
+              <span class="MessageForm_MemberIcon">
+                <img :src="user.profile.image_48">
+              </span>
+              <span class="MessageForm_MemberName">
+                {{user.name}}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="MessageForm_Atmark" slot="reference" @click="popover = true">
+          @
+        </div>
+      </el-popover>
+    </div>
   </div>
 </template>
 
 <script>
-import { find } from "lodash"
+import { find, map } from "lodash"
 export default {
   name: "MessageForm",
   props: {
@@ -22,14 +48,19 @@ export default {
     customEmojis: Array,
     emojiList: Object,
     users: Object,
+    channelInfo: Object,
   },
   data() {
     return {
       message: "",
+      popover: false,
       isProcessing: false,
     }
   },
   computed: {
+    suggestedMembers() {
+      return map(this.channelInfo.members, userId => this.users[userId])
+    },
     placeholder() {
       return `#${this.channelName}`
     },
@@ -44,6 +75,17 @@ export default {
   methods: {
     insertNewline() {
       this.message += "\n"
+    },
+    insertMemberId(user) {
+      this.popover = false
+      this.selectUser(user.name)
+    },
+    async selectUser(value) {
+      this.message += `@${value} `
+      await this.$nextTick()
+      const input = this.$refs.input
+      const textarea = input.$el.querySelector("textarea")
+      textarea.focus()
     },
     onEnter() {
       if (this.isProcessing) return
@@ -71,5 +113,54 @@ export default {
 <style lang="scss" scoped>
 .MessageForm {
   padding: 5px;
+  position: relative;
+  &_Mention {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+  &_Members {
+    max-height: 250px;
+    overflow-y: auto;
+  }
+  &_Member {
+    display: flex;
+    align-items: center;
+    padding: 7px 10px;
+    &:hover {
+      cursor: pointer;
+      background-color: #005e99;
+      color: #fff;
+    }
+  }
+  &_Member + &_Member {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  &_MemberName {
+    font-weight: 600;
+  }
+  &_MemberIcon {
+    width: 24px;
+    margin-right: 7px;
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 3px;
+      display: block;
+    }
+  }
+  &_Atmark {
+    color: #a5a5a5;
+    cursor: pointer;
+    &:hover {
+      color: #005e99;
+    }
+  }
+}
+</style>
+
+<style>
+.MessageForm_Popover {
+  padding: 5px 3px;
 }
 </style>

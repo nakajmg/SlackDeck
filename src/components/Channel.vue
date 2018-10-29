@@ -30,7 +30,16 @@
         />
       </transition-group>
     </div>
-    <MessageForm :channelName="channelName" :channelId="channelId" :user_id="user_id" :users="users" :emojiList="emojiList" :customEmojis="customEmojis" @submitMessage="onSubmitMessage"/>
+    <MessageForm
+      :channelName="channelName"
+      :channelId="channelId"
+      :channelInfo="channel.channelInfo"
+      :user_id="user_id"
+      :users="users"
+      :emojiList="emojiList"
+      :customEmojis="customEmojis"
+      @submitMessage="onSubmitMessage"
+    />
     <div
       class="Channel_Picker"
       v-if="pickerOpened"

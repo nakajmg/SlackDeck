@@ -49,7 +49,8 @@ export default token => {
         })
         return res.channels
       },
-      async history({ channelId, count = 10 }) {
+      // https://api.slack.com/methods/channels.history
+      async history({ channelId, count = 5 }) {
         const url = ENTRY_POINT`/channels.history`
         const res = await _get(url, {
           channel: channelId,
@@ -57,8 +58,17 @@ export default token => {
         })
         return res.messages
       },
+      // https://api.slack.com/methods/channels.info
+      async info({ channelId }) {
+        const url = ENTRY_POINT`/channels.info`
+        const res = await _get(url, {
+          channel: channelId,
+        })
+        return res.channel
+      },
     },
     users: {
+      // https://api.slack.com/methods/users.list
       async list() {
         const url = ENTRY_POINT`/users.list`
         const res = await _get(url)
@@ -66,6 +76,7 @@ export default token => {
       },
     },
     rtm: {
+      // https://api.slack.com/methods/rtm.connect
       async connect() {
         const url = ENTRY_POINT`/rtm.connect`
         const res = await _get(url)
@@ -76,6 +87,7 @@ export default token => {
       },
     },
     emoji: {
+      // https://api.slack.com/methods/emoji.list
       async list() {
         const url = ENTRY_POINT`/emoji.list`
         const res = await _get(url)
@@ -83,6 +95,7 @@ export default token => {
       },
     },
     chat: {
+      // https://api.slack.com/methods/chat.postMessage
       async postMessage({ channel, text }) {
         const url = ENTRY_POINT`/chat.postMessage`
         const res = await _post(url, { channel, text, as_user: true, link_names: true })
@@ -90,6 +103,7 @@ export default token => {
       },
     },
     reactions: {
+      // https://api.slack.com/methods/reactions.add
       async add({ name, channel, timestamp }) {
         const url = ENTRY_POINT`/reactions.add`
         await _post(url, {
@@ -98,6 +112,7 @@ export default token => {
           timestamp,
         })
       },
+      // https://api.slack.com/methods/reactions.remove
       async remove({ name, channel, timestamp }) {
         const url = ENTRY_POINT`/reactions.remove`
         await _post(url, {
@@ -108,6 +123,7 @@ export default token => {
       },
     },
     bots: {
+      // https://api.slack.com/methods/bots.info
       async info(bot) {
         const url = ENTRY_POINT`/bots.info`
         const res = await _get(url, { bot })
