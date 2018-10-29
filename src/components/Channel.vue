@@ -30,6 +30,7 @@
         />
       </transition-group>
     </div>
+    <MessageForm :channelName="channelName" :channelId="channelId" :user_id="user_id" :users="users" :emojiList="emojiList" :customEmojis="customEmojis" @submitMessage="onSubmitMessage"/>
     <div
       class="Channel_Picker"
       v-if="pickerOpened"
@@ -49,6 +50,7 @@
 <script>
 import Message from "./Message.vue"
 import ChannelHeader from "./Channel/ChannelHeader.vue"
+import MessageForm from "./MessageForm.vue"
 import { Picker } from "emoji-mart-vue"
 import events from "../variables/events"
 export default {
@@ -118,7 +120,12 @@ export default {
     },
     scrollBottom() {
       const el = this.$refs.messages
-      el.scrollTop = el.scrollHeight
+      this.$nextTick(() => {
+        el.scrollTop = el.scrollHeight
+      })
+    },
+    onSubmitMessage(data) {
+      this.$emit("submitMessage", data)
     },
   },
   updated() {
@@ -131,6 +138,7 @@ export default {
     Message,
     ChannelHeader,
     Picker,
+    MessageForm,
   },
 }
 </script>

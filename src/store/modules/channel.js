@@ -134,5 +134,12 @@ export default {
         name,
       })
     },
+    async [types.SUBMIT_MESSAGE]({ state }, { channelId, message }) {
+      await api(state.access_token).chat.postMessage({
+        channel: channelId,
+        text: message,
+      })
+      console.log(channelId, message)
+    },
   },
 }

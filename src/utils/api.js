@@ -82,6 +82,13 @@ export default token => {
         return res.emoji
       },
     },
+    chat: {
+      async postMessage({ channel, text }) {
+        const url = ENTRY_POINT`/chat.postMessage`
+        const res = await _post(url, { channel, text, as_user: true, link_names: true })
+        console.log(res)
+      },
+    },
     reactions: {
       async add({ name, channel, timestamp }) {
         const url = ENTRY_POINT`/reactions.add`

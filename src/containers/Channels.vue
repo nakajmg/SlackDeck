@@ -39,6 +39,7 @@ export default {
               moveRight: this.moveRightChannel,
               [types.REACTION_TO_MESSAGE]: this.reactionToMessage,
               [events.CLICK_REACTION]: this.reactionToMessage,
+              submitMessage: this.submitMessage,
             },
           })
         })}
@@ -87,6 +88,9 @@ export default {
         name,
         channelId,
       })
+    },
+    submitMessage({ channelId, user_id, message }) {
+      this.$store.dispatch(`${channelId}/${types.SUBMIT_MESSAGE}`, { channelId, user_id, message })
     },
   },
 }

@@ -10,6 +10,7 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
+  Input,
 } from "element-ui"
 
 locale.use(lang)
@@ -21,3 +22,4 @@ Vue.use(Tooltip)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
+Vue.use(Input)
