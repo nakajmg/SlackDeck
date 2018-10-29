@@ -46,33 +46,14 @@
             v-on="events"
           />
         </div>
-        <div class="Message_Actions">
-          <div class="Message_Action">
-            <el-tooltip content="Add reaction" placement="top" popper-class="Message_Tooltip">
-              <span @click="showEmojiPicker">
-                <FontAwesomeIcon icon="grin-squint"></FontAwesomeIcon>
-              </span>
-            </el-tooltip>
-          </div>
-          <div class="Message_Action">
-            <el-tooltip content="Copy link" placement="top" popper-class="Message_Tooltip">
-              <CopyMessageLink
-                :domain="domain"
-                :channel="channel"
-                :ts="ts"
-              />
-            </el-tooltip>
-          </div>
-          <div class="Message_Action">
-            <el-tooltip content="Open on Slack.app" placement="top" popper-class="Message_Tooltip">
-              <OpenOnSlack
-                :team="team"
-                :channel="channel"
-                :ts="ts"
-              />
-            </el-tooltip>
-          </div>
-        </div>
+        <Actions
+          class="Message_Actions"
+          :team="team"
+          :channel="channel"
+          :ts="ts"
+          :domain="domain"
+          @showEmojiPicker="showEmojiPicker"
+        />
       </div>
       <div
         class="Message_Replies"
@@ -93,7 +74,6 @@
 </template>
 
 <script>
-import types from "../store/types"
 import events from "../variables/events"
 import { includes } from "lodash"
 import Attachment from "./Message/Attachment.vue"
@@ -108,6 +88,7 @@ import reactionsToEmoji from "../utils/message/reactionsToEmoji"
 import emojify from "../utils/message/emojify"
 import OpenOnSlack from "../basics/OpenOnSlack.vue"
 import CopyMessageLink from "../basics/CopyMessageLink.vue"
+import Actions from "./Message/Actions.vue"
 export default {
   name: "Message",
   components: {
@@ -115,6 +96,7 @@ export default {
     File,
     Reply,
     Reaction,
+    Actions,
     OpenOnSlack,
     CopyMessageLink,
   },
@@ -196,13 +178,10 @@ export default {
     },
   },
   methods: {
-    copyLink() {
-      this.$emit("copyLink", this.$props)
-    },
-    showEmojiPicker() {
+    showEmojiPicker({ type, ts }) {
       this.$emit("showEmojiPicker", {
-        type: types.REACTION_TO_MESSAGE,
-        ts: this.ts,
+        type,
+        ts,
       })
     },
     onClickReaction({ name, ts, reacted }) {
@@ -348,45 +327,6 @@ export default {
     display: flex;
     align-items: center;
     margin-top: 3px;
-  }
-  &_Actions {
-    display: none;
-    position: absolute;
-    right: 10px;
-    top: -10px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    // padding: 1px 2px;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.8em;
-    background-color: #fff;
-    text-align: center;
-    border-radius: 3px;
-    &:hover {
-      box-shadow: 1px 1px 1px -1px rgba(0, 0, 0, 0.8);
-    }
-  }
-  &_Action {
-    color: #ababab;
-    padding: 3px;
-    width: 25px;
-    height: 25px;
-    &:hover {
-      cursor: pointer;
-      color: #005e99;
-    }
-    & > * {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-  }
-  &_Action + &_Action {
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  &_Tooltip {
-    padding: 8px;
-    font-size: 10px;
   }
   &_Main:hover {
     background-color: #f9f9f9;
