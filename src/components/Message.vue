@@ -32,9 +32,10 @@
           v-for="file in files"
           v-bind="file"
           :key="file.id"
+          v-if="controls"
         />
         <div class="Message_Reactions"
-          v-if="reactions && reactions.length !== 0"
+          v-if="reactions && reactions.length !== 0 && controls"
         >
           <Reaction
             v-for="(reaction, index) in reactionsToEmoji(reactions, emojiList)"
@@ -47,12 +48,14 @@
           />
         </div>
         <Actions
+          v-if="controls"
           class="Message_Actions"
           :team="team"
           :channel="channel"
           :domain="domain"
           :ts="ts"
           @showEmojiPicker="showEmojiPicker"
+          @reply="onReply"
         />
       </div>
       <div
@@ -69,8 +72,10 @@
           :team="team"
           :channel="channel"
           :domain="domain"
+          :controls="controls"
           v-on="events"
           @showEmojiPicker="showEmojiPicker"
+          @reply="onReply"
         />
       </div>
     </div>
@@ -139,6 +144,10 @@ export default {
     last_read: String,
     unread_count: Number,
     domain: String,
+    controls: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -194,6 +203,9 @@ export default {
         ts: ts || this.ts,
         reacted,
       })
+    },
+    onReply({ thread_ts }) {
+      this.$emit("reply", { thread_ts })
     },
     convTimestamp,
     convUserIcon,

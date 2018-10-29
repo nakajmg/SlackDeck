@@ -1,54 +1,57 @@
 <template>
   <div class="MessageForm">
-    <el-input type="textarea" autosize :placeholder="placeholder"
-      v-model="message"
-      @keydown.native.enter.exact.prevent="onEnter"
-      @keydown.native.shift.enter.exact.prevent="insertNewline"
-      @compositionstart.native="onCompositionStart"
-      @compositionend.native="onCompositionEnd"
-      ref="input"
-      :disabled="!isInChannel"
-    >
-    </el-input>
-    <div class="MessageForm_Emoji">
-      <el-popover trigger="click" popper-class="MessageForm_EmojiPicker" v-model="emojiPicker" :disabled="!isInChannel">
-        <div>
-          <Picker
-            :custom="customEmojis"
-            :perLine="7"
-            emoji=":heart_eyes_cat:"
-            title="Pick a Emoji"
-            :sheetSize="32"
-            @select="onSelectEmoji"
-          />
-        </div>
-        <div class="MessageForm_Atmark" slot="reference">
-          <FontAwesomeIcon icon="grin-squint"></FontAwesomeIcon>
-        </div>
-      </el-popover>
-    </div>
-    <div class="MessageForm_Mention">
-      <el-popover trigger="hover" popper-class="MessageForm_Popover" v-model="popover">
-        <div class="MessageForm_Members">
-          <div
-            class="MessageForm_Member"
-            v-for="user in channelMembers" :key="user.id"
-            :value="'@' + user.name"
-            :label="user.name"
-            @click="isInChannel && insertMemberId(user)"
-          >
-            <span class="MessageForm_MemberIcon">
-              <img :src="user.profile.image_48">
-            </span>
-            <span class="MessageForm_MemberName">
-              {{user.name}}
-            </span>
+    <slot></slot>
+    <div class="MessageForm_Input">
+      <el-input type="textarea" autosize :placeholder="placeholder"
+        v-model="message"
+        @keydown.native.enter.exact.prevent="onEnter"
+        @keydown.native.shift.enter.exact.prevent="insertNewline"
+        @compositionstart.native="onCompositionStart"
+        @compositionend.native="onCompositionEnd"
+        ref="input"
+        :disabled="!isInChannel"
+      >
+      </el-input>
+      <div class="MessageForm_Emoji">
+        <el-popover trigger="click" popper-class="MessageForm_EmojiPicker" v-model="emojiPicker" :disabled="!isInChannel">
+          <div>
+            <Picker
+              :custom="customEmojis"
+              :perLine="7"
+              emoji=":heart_eyes_cat:"
+              title="Pick a Emoji"
+              :sheetSize="32"
+              @select="onSelectEmoji"
+            />
           </div>
-        </div>
-        <div class="MessageForm_Atmark" slot="reference">
-          @
-        </div>
-      </el-popover>
+          <div class="MessageForm_Atmark" slot="reference">
+            <FontAwesomeIcon :icon="['far', 'grin-squint']"></FontAwesomeIcon>
+          </div>
+        </el-popover>
+      </div>
+      <div class="MessageForm_Mention">
+        <el-popover trigger="hover" popper-class="MessageForm_Popover" v-model="popover">
+          <div class="MessageForm_Members">
+            <div
+              class="MessageForm_Member"
+              v-for="user in channelMembers" :key="user.id"
+              :value="'@' + user.name"
+              :label="user.name"
+              @click="isInChannel && insertMemberId(user)"
+            >
+              <span class="MessageForm_MemberIcon">
+                <img :src="user.profile.image_48">
+              </span>
+              <span class="MessageForm_MemberName">
+                {{user.name}}
+              </span>
+            </div>
+          </div>
+          <div class="MessageForm_Atmark" slot="reference">
+            @
+          </div>
+        </el-popover>
+      </div>
     </div>
   </div>
 </template>
@@ -71,6 +74,7 @@ export default {
     channelInfo: Object,
     channelMembers: Array,
     isInChannel: Boolean,
+    thread_ts: String,
   },
   data() {
     return {
@@ -99,17 +103,6 @@ export default {
     insertMemberId(user) {
       this.selectUser(user.name)
     },
-    async selectUser(value) {
-      const input = this.$refs.input
-      const textarea = input.$el.querySelector("textarea")
-      const start = textarea.selectionStart
-      const end = textarea.selectionEnd
-      let text = this.message
-      text = text.slice(0, start) + ` @${value} ` + text.slice(end)
-      this.message = text
-      await this.$nextTick()
-      textarea.focus()
-    },
     onEnter() {
       if (this.isProcessing) return
       this.submit()
@@ -120,6 +113,7 @@ export default {
         channelId: this.channelId,
         user_id: this.user_id,
         message: this.message,
+        thread_ts: this.thread_ts,
       })
       this.message = ""
     },
@@ -129,15 +123,21 @@ export default {
     onCompositionEnd() {
       this.isProcessing = false
     },
-    async onSelectEmoji({ colons }) {
+    onSelectEmoji({ colons }) {
       this.emojiPicker = false
+      this.insertText(colons)
+    },
+    async selectUser(value) {
+      this.insertText(`@${value}`)
+    },
+    async insertText(value) {
       const input = this.$refs.input
       const textarea = input.$el.querySelector("textarea")
       const start = textarea.selectionStart
       const end = textarea.selectionEnd
       let text = this.message
-      text = text.slice(0, start) + `${colons}` + text.slice(end)
-      this.message = text
+      text = `${text.slice(0, start)} ${value} ${text.slice(end)}`
+      this.message = text.trimLeft()
       await this.$nextTick()
       textarea.focus()
     },
@@ -149,15 +149,18 @@ export default {
 .MessageForm {
   padding: 5px;
   position: relative;
+  &_Input {
+    position: relative;
+  }
   &_Mention {
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 15px;
+    top: 5px;
   }
   &_Emoji {
     position: absolute;
-    right: 30px;
-    top: 10px;
+    right: 40px;
+    top: 5px;
   }
   &_Members {
     max-height: 250px;

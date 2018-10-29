@@ -26,6 +26,7 @@
           v-if="!message.parent_user_id"
           :domain="teamInfo.domain"
           @showEmojiPicker="showEmojiPicker"
+          @reply="reply"
           v-on="events.reaction"
         />
       </transition-group>
@@ -40,8 +41,34 @@
       :customEmojis="customEmojis"
       :channelMembers="channelMembers"
       :isInChannel="isInChannel"
+      :thread_ts="threadTargetTS"
       @submitMessage="onSubmitMessage"
-    />
+    >
+      <div v-if="threadTargetTS" class="Channel_ReplyMessage">
+        <div class="Channel_ReplyMessageHeading">
+          <FontAwesomeIcon icon="reply"></FontAwesomeIcon>
+          <span class="Channel_ReplyMessageHeadingText">
+            Reply to
+          </span>
+          <span class="Channel_ReplyMessageCancel" @click="cancelReply">
+            <span class="el-icon-close"></span>
+          </span>
+        </div>
+        <div class="Channel_ReplyMessageBody">
+          <Message
+            v-bind="threadMessage"
+            :user_id="user_id"
+            :users="users"
+            :emojiList="emojiList"
+            :messages="channel.messages"
+            :team="teamInfo.id"
+            :channel="channelId"
+            :domain="teamInfo.domain"
+            :controls="false"
+          />
+        </div>
+      </div>
+    </MessageForm>
     <div
       class="Channel_PickerScreen"
       v-show="pickerOpened"
@@ -68,7 +95,7 @@ import ChannelHeader from "./Channel/ChannelHeader.vue"
 import MessageForm from "./MessageForm.vue"
 import { Picker } from "emoji-mart-vue"
 import events from "../variables/events"
-import { map, some } from "lodash"
+import { map, some, find } from "lodash"
 export default {
   name: "Channel",
   props: {
@@ -87,6 +114,7 @@ export default {
     return {
       pickerOpened: false,
       preData: null,
+      threadTargetTS: null,
     }
   },
   computed: {
@@ -102,6 +130,10 @@ export default {
           [events.CLICK_REACTION]: this.onClickReaction,
         },
       }
+    },
+    threadMessage() {
+      if (!this.threadTargetTS) return
+      return find(this.channel.messages, message => message.ts === this.threadTargetTS)
     },
   },
   methods: {
@@ -151,6 +183,12 @@ export default {
     },
     onSubmitMessage(data) {
       this.$emit("submitMessage", data)
+    },
+    reply({ thread_ts }) {
+      this.threadTargetTS = thread_ts
+    },
+    cancelReply() {
+      this.threadTargetTS = null
     },
   },
   updated() {
@@ -212,6 +250,30 @@ export default {
     z-index: 1;
     width: 270px;
     height: 420px;
+  }
+  &_ReplyMessage {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: none;
+  }
+  &_ReplyMessageHeading {
+    background-color: #42a587;
+    padding: 5px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    font-size: 0.8em;
+  }
+  &_ReplyMessageHeadingText {
+    margin-left: 7px;
+  }
+  &_ReplyMessageBody {
+    padding: 5px;
+    background-color: #f9f9f9;
+  }
+  &_ReplyMessageCancel {
+    cursor: pointer;
+    margin-left: auto;
+    font-size: 1.2em;
   }
 }
 .emoji-mart-scroll + .emoji-mart-bar {

@@ -1,9 +1,16 @@
 <template>
   <div class="Actions">
     <div class="Actions_Action">
+      <el-tooltip content="Reply" placement="top" popper-class="Actions_Tooltip">
+        <span @click="reply">
+          <FontAwesomeIcon icon="reply"></FontAwesomeIcon>
+        </span>
+      </el-tooltip>
+    </div>
+    <div class="Actions_Action">
       <el-tooltip content="Add reaction" placement="top" popper-class="Actions_Tooltip">
         <span @click="showEmojiPicker">
-          <FontAwesomeIcon icon="grin-squint"></FontAwesomeIcon>
+          <FontAwesomeIcon :icon="['far', 'grin-squint']"></FontAwesomeIcon>
         </span>
       </el-tooltip>
     </div>
@@ -49,6 +56,11 @@ export default {
       this.$emit("showEmojiPicker", {
         type: types.REACTION_TO_MESSAGE,
         ts: this.ts,
+      })
+    },
+    reply() {
+      this.$emit("reply", {
+        thread_ts: this.ts,
       })
     },
   },

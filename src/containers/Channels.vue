@@ -89,8 +89,13 @@ export default {
         channelId,
       })
     },
-    submitMessage({ channelId, user_id, message }) {
-      this.$store.dispatch(`${channelId}/${types.SUBMIT_MESSAGE}`, { channelId, user_id, message })
+    submitMessage({ channelId, user_id, message, thread_ts }) {
+      this.$store.dispatch(`${channelId}/${types.SUBMIT_MESSAGE}`, {
+        channelId,
+        user_id,
+        message,
+        thread_ts,
+      })
     },
   },
 }

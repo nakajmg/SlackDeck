@@ -18,7 +18,7 @@
       >
       </div>
       <div class="Message_Reactions"
-        v-if="reactions && reactions.length !== 0"
+        v-if="reactions && reactions.length !== 0 && controls"
       >
         <Reaction class="Message_Reaction"
           v-for="(reaction, index) in reactionsToEmoji(reactions, emojiList)"
@@ -38,6 +38,8 @@
       :channel="channel"
       :domain="domain"
       @showEmojiPicker="showEmojiPicker"
+      @reply="reply"
+      v-if="controls"
     />
   </div>
 </template>
@@ -77,6 +79,10 @@ export default {
     domain: String,
     team: String,
     channel: String,
+    controls: {
+      type: Boolean,
+      default: true,
+    },
   },
   computed: {
     events() {
@@ -92,7 +98,6 @@ export default {
     convertMessageToHTML,
     reactionsToEmoji,
     onClickReaction({ name, reacted }) {
-      console.log(name, reacted)
       this.$emit(events.CLICK_REACTION, {
         name,
         ts: this.ts,
@@ -103,6 +108,11 @@ export default {
       this.$emit("showEmojiPicker", {
         ts,
         type,
+      })
+    },
+    reply() {
+      this.$emit("reply", {
+        thread_ts: this.thread_ts,
       })
     },
   },

@@ -96,9 +96,9 @@ export default token => {
     },
     chat: {
       // https://api.slack.com/methods/chat.postMessage
-      async postMessage({ channel, text }) {
+      async postMessage({ channel, text, thread_ts }) {
         const url = ENTRY_POINT`/chat.postMessage`
-        const res = await _post(url, { channel, text, as_user: true, link_names: true })
+        const res = await _post(url, { channel, text, thread_ts, as_user: true, link_names: true })
         console.log(res)
       },
     },
