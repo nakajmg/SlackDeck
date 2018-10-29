@@ -9,6 +9,23 @@
       ref="input"
     >
     </el-input>
+    <div class="MessageForm_Emoji">
+      <el-popover trigger="hover" popper-class="MessageForm_EmojiPicker" v-model="emojiPicker">
+        <div>
+          <Picker
+            :custom="customEmojis"
+            :perLine="7"
+            emoji=":heart_eyes_cat:"
+            title="Pick a Emoji"
+            :sheetSize="32"
+            @select="onSelectEmoji"
+          />
+        </div>
+        <div class="MessageForm_Atmark" slot="reference">
+          <FontAwesomeIcon icon="grin-squint"></FontAwesomeIcon>
+        </div>
+      </el-popover>
+    </div>
     <div class="MessageForm_Mention">
       <el-popover trigger="hover" popper-class="MessageForm_Popover" v-model="popover">
         <div class="MessageForm_Members">
@@ -37,8 +54,12 @@
 
 <script>
 import { find, map } from "lodash"
+import { Picker } from "emoji-mart-vue"
 export default {
   name: "MessageForm",
+  components: {
+    Picker,
+  },
   props: {
     channelName: String,
     channelId: String,
@@ -52,6 +73,7 @@ export default {
     return {
       message: "",
       popover: false,
+      emojiPicker: false,
       isProcessing: false,
     }
   },
@@ -107,6 +129,18 @@ export default {
     onCompositionEnd() {
       this.isProcessing = false
     },
+    async onSelectEmoji({ colons }) {
+      this.emojiPicker = false
+      const input = this.$refs.input
+      const textarea = input.$el.querySelector("textarea")
+      const start = textarea.selectionStart
+      const end = textarea.selectionEnd
+      let text = this.message
+      text = text.slice(0, start) + `${colons}` + text.slice(end)
+      this.message = text
+      await this.$nextTick()
+      textarea.focus()
+    },
   },
 }
 </script>
@@ -118,6 +152,11 @@ export default {
   &_Mention {
     position: absolute;
     right: 10px;
+    top: 10px;
+  }
+  &_Emoji {
+    position: absolute;
+    right: 30px;
     top: 10px;
   }
   &_Members {
@@ -156,11 +195,15 @@ export default {
     &:hover {
       color: #005e99;
     }
+    outline: none;
   }
 }
 </style>
 
 <style>
+.MessageForm_EmojiPicker {
+  padding: 0;
+}
 .MessageForm_Popover {
   padding: 5px 3px;
 }
