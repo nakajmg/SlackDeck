@@ -368,6 +368,11 @@ export default {
       cursor: pointer;
       color: #005e99;
     }
+    & > * {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
   }
   &_Action + &_Action {
     border-left: 1px solid rgba(0, 0, 0, 0.1);
