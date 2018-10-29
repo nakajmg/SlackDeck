@@ -7,9 +7,11 @@
       <span class="ChannelHeader_Sharp">
         <FontAwesomeIcon :icon="['fab', 'slack-hash']"/>
       </span>
-      <span class="ChannelHeader_ChannelName">
-        {{channelName}}
-      </span>
+      <el-tooltip content="Open on Slack.app">
+        <a class="ChannelHeader_ChannelName" :href="slackLink">
+          {{channelName}}
+        </a>
+      </el-tooltip>
       <span class="ChannelHeader_Menu"
         @click="onClickMenu"
       >
@@ -42,10 +44,12 @@
 </template>
 
 <script>
+import messageAppLink from "../../utils/messageAppLink"
 export default {
   name: "ChannelHeader",
   props: {
     channelName: String,
+    channelId: String,
     disableMoveLeft: Boolean,
     disableMoveRight: Boolean,
     teamInfo: Object,
@@ -54,6 +58,14 @@ export default {
     return {
       menuOpened: false,
     }
+  },
+  computed: {
+    slackLink() {
+      return messageAppLink({
+        team: this.teamInfo.id,
+        channel: this.channelId,
+      })
+    },
   },
   methods: {
     onClickMenu() {
@@ -102,6 +114,8 @@ export default {
     font-size: 0.9em;
     font-weight: 600;
     margin-right: 0.5em;
+    color: inherit;
+    text-decoration: none;
   }
   &_TeamName {
     font-size: 0.7em;

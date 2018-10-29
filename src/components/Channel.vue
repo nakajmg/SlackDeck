@@ -6,6 +6,7 @@
       @moveRight="moveRight"
       @remove="remove"
       :channelName="channelName"
+      :channelId="channelId"
       :disableMoveLeft="disableMoveLeft"
       :disableMoveRight="disableMoveRight"
       :teamInfo="teamInfo"
