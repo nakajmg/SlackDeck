@@ -10,22 +10,24 @@
       :disableMoveRight="disableMoveRight"
       :teamInfo="teamInfo"
     />
-    <div class="Channel_Messages">
-      <Message
-        v-for="message in channel.messages"
-        :key="message.ts"
-        v-bind="message"
-        :user_id="user_id"
-        :users="users"
-        :emojiList="emojiList"
-        :messages="channel.messages"
-        :team="teamInfo.id"
-        :channel="channelId"
-        v-if="!message.parent_user_id"
-        :domain="teamInfo.domain"
-        @showEmojiPicker="showEmojiPicker"
-        v-on="events.reaction"
-      />
+    <div class="Channel_Messages" ref="messages">
+      <transition-group name="messages" tag="div">
+        <Message
+          v-for="message in channel.messages"
+          :key="message.ts"
+          v-bind="message"
+          :user_id="user_id"
+          :users="users"
+          :emojiList="emojiList"
+          :messages="channel.messages"
+          :team="teamInfo.id"
+          :channel="channelId"
+          v-if="!message.parent_user_id"
+          :domain="teamInfo.domain"
+          @showEmojiPicker="showEmojiPicker"
+          v-on="events.reaction"
+        />
+      </transition-group>
     </div>
     <div
       class="Channel_Picker"
@@ -113,6 +115,16 @@ export default {
         reacted,
       })
     },
+    scrollBottom() {
+      const el = this.$refs.messages
+      el.scrollTop = el.scrollHeight
+    },
+  },
+  updated() {
+    this.scrollBottom()
+  },
+  mounted() {
+    this.scrollBottom()
   },
   components: {
     Message,
@@ -125,9 +137,9 @@ export default {
 <style lang="scss">
 .Channel {
   box-sizing: border-box;
-  width: 330px;
-  min-width: 330px;
-  max-width: 330px;
+  width: 400px;
+  min-width: 400px;
+  max-width: 400px;
   margin-right: 3px;
   border: 1px solid #eee;
   position: relative;
@@ -160,5 +172,17 @@ export default {
   height: 100%;
   transform: scale(0.7);
   // transform-origin-y: 100%;
+}
+.messages-enter-active {
+  transition: all 5s;
+}
+.messages-enter {
+  background-color: rgb(255, 255, 212);
+}
+.messages-leave-active {
+  transition: all 1s;
+}
+.messages-leave-to {
+  background-color: rgb(255, 170, 170);
 }
 </style>
