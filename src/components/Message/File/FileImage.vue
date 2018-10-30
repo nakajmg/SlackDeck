@@ -102,7 +102,7 @@ export default {
     border: 1px solid rgba(0, 0, 0, 0.1);
   }
   &_Name {
-    color: #2e2e2e;
+    color: #c0c0c0;
     font-size: 0.7em;
     margin-top: 5px;
     margin-bottom: 5px;

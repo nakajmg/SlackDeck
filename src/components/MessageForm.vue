@@ -210,4 +210,7 @@ export default {
 .MessageForm_Popover {
   padding: 5px 3px;
 }
+.el-textarea__inner {
+  border-radius: 0;
+}
 </style>

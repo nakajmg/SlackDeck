@@ -90,9 +90,11 @@ export default {
   position: relative;
   &_Header {
     padding: 5px;
-    border-bottom: 1px solid #eee;
+    // border-bottom: 1px solid #eee;
     display: flex;
     align-items: center;
+    background-color: #1c2938;
+    border-bottom: 1px solid #14171a;
   }
   &_TeamIcon {
     width: 24px;
@@ -137,21 +139,23 @@ export default {
     margin-left: auto;
     display: flex;
     align-items: center;
-    padding: 5px;
-    border-bottom: 1px solid #eee;
+    padding: 10px 5px;
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: #fff;
+    // border-bottom: 1px solid #eee;
+    background-color: #1c2938;
   }
   &_Delete,
   &_Close,
   &_MoveLeft,
   &_MoveRight {
+    background-color: inherit;
     font-size: 1.2em;
     border: none;
     margin: 0;
     padding: 0;
+    color: inherit;
     cursor: pointer;
     &:hover {
       color: #0576b9;

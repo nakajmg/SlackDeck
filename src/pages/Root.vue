@@ -45,7 +45,8 @@ body {
   height: 100vh;
   margin: 0 auto;
   padding: 0;
-  background-color: #f7fbfd;
+  /* background-color: #f7fbfd; */
+  background-color: #10171e;
 }
 * {
   box-sizing: border-box;

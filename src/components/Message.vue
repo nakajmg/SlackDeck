@@ -222,8 +222,9 @@ export default {
   text-align: left;
   word-break: break-all;
   display: flex;
-  padding: 5px;
+  padding: 10px 5px;
   // border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #14171a;
   width: 100%;
   position: relative;
   &_Content {
@@ -345,7 +346,7 @@ export default {
     margin-top: 3px;
   }
   &_Main:hover {
-    background-color: #f9f9f9;
+    // background-color: #f9f9f9;
   }
   &_Main:hover &_Actions {
     display: flex;

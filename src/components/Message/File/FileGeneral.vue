@@ -74,7 +74,8 @@ export default {
 <style lang="scss" scoped>
 .FileGeneral {
   position: relative;
-  border: 1px solid #e8e8e8;
+  // border: 1px solid #e8e8e8;
+  border: 1px solid #080808;
   padding: 10px;
   margin-top: 10px;
   &:hover {
@@ -103,7 +104,8 @@ export default {
     display: inline-flex;
     font-size: 35px;
     margin-right: 10px;
-    color: #6078ff;
+    // color: #6078ff;
+    color: #ffe828;
   }
 }
 </style>

@@ -35,7 +35,7 @@ export default {
   grid-row: 1;
   grid-column: 1;
   padding: 5px;
-  border-right: 1px solid #eee;
+  // border-right: 1px solid #eee;
   margin-right: 3px;
   color: #fff;
   background-color: #1c2938;

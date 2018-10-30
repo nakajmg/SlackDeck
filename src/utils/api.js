@@ -50,7 +50,7 @@ export default token => {
         return res.channels
       },
       // https://api.slack.com/methods/channels.history
-      async history({ channelId, count = 5 }) {
+      async history({ channelId, count = 20 }) {
         const url = ENTRY_POINT`/channels.history`
         const res = await _get(url, {
           channel: channelId,

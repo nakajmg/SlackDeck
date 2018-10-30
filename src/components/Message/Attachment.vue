@@ -151,7 +151,7 @@ export default {
     }
   }
   &_Author {
-    color: #555;
+    color: #fff;
     font-size: 0.8em;
     a {
       text-decoration: none;
@@ -222,7 +222,7 @@ export default {
   &_Service {
     margin-top: 10px;
     padding-left: 10px;
-    border-left: 4px solid #e0e0e0;
+    border-left: 3px solid #a59300;
   }
   &_ServiceInfo {
     display: flex;
@@ -236,7 +236,7 @@ export default {
   }
   &_ServiceName {
     font-size: 0.8em;
-    color: #6e6e6e;
+    color: #fff;
   }
   &_ServiceTitle {
     font-weight: 600;

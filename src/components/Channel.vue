@@ -212,13 +212,18 @@ export default {
   width: 400px;
   min-width: 400px;
   max-width: 400px;
-  margin-right: 3px;
-  border: 1px solid #eee;
+  // margin-right: 3px;
+  margin-left: 3px;
+  // border: 1px solid #eee;
   position: relative;
   height: 100%;
   display: grid;
   grid-template-rows: 40px 1fr;
-  background-color: #fff;
+  // background-color: #fff;
+  // background-color: #;
+  color: #fff;
+  // border-bottom: 1px solid #14171a;
+  background-color: #15202b;
   &_Header {
     grid-row: 1;
   }
@@ -252,11 +257,10 @@ export default {
     height: 420px;
   }
   &_ReplyMessage {
-    border: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: none;
   }
   &_ReplyMessageHeading {
-    background-color: #42a587;
+    background-color: #282a2b;
     padding: 5px;
     color: #fff;
     display: flex;
@@ -268,6 +272,7 @@ export default {
   }
   &_ReplyMessageBody {
     padding: 5px;
+    color: #282a2b;
     background-color: #f9f9f9;
   }
   &_ReplyMessageCancel {

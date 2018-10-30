@@ -95,7 +95,7 @@ export default {
 
 <style lang="scss" scoped>
 .FilePDF {
-  border: 1px solid #e8e8e8;
+  border: 1px solid #080808;
   padding: 10px;
   margin-top: 10px;
   position: relative;
