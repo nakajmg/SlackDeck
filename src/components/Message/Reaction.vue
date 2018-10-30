@@ -53,9 +53,9 @@ export default {
 .Reaction {
   align-items: center;
   display: inline-flex;
-  font-size: 11px;
-  line-height: 16px;
-  margin-bottom: 5px;
+  // font-size: 11px;
+  margin-top: 5px;
+  // margin-bottom: 5px;
   color: #717274;
   font-family: monospace;
   cursor: pointer;
@@ -63,21 +63,29 @@ export default {
     padding: 2px;
     border-radius: 5px;
     border: 1px solid #f0f0f0;
+    background-color: #fff;
     text-align: center;
     margin-right: 2px;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     [data-custom-emoji] {
       width: 100%;
-      width: 16px;
+      // width: 22px;
       height: auto;
       display: block;
     }
     [data-emoji] {
-      margin-left: 2px;
+      font-size: 1.2em;
+      // letter-spacing: -4px;
     }
   }
   ._isMyReaction {
-    background-color: rgba(5, 118, 185, 0.05);
-    border-color: rgba(5, 118, 185, 0.3);
+    // background-color: rgba(5, 118, 185, 0.05);
+    // border-color: rgba(5, 118, 185, 0.3);
+    border: 2px solid rgb(55, 182, 255);
   }
 }
 </style>

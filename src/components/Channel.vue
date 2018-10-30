@@ -209,9 +209,9 @@ export default {
 <style lang="scss">
 .Channel {
   box-sizing: border-box;
-  width: 400px;
-  min-width: 400px;
-  max-width: 400px;
+  width: 360px;
+  min-width: 360px;
+  max-width: 360px;
   // margin-right: 3px;
   margin-left: 3px;
   // border: 1px solid #eee;
@@ -232,7 +232,7 @@ export default {
     overflow: auto;
     max-height: 100%;
     padding-top: 1em;
-    padding-bottom: 1em;
+    padding-bottom: 0.5em;
   }
   &:last-child {
     margin-right: 0;
@@ -290,16 +290,17 @@ export default {
   // transform-origin-y: 100%;
 }
 .messages-enter-active {
-  transition: all 3s;
+  transition: all 1s ease-in;
 }
 .messages-enter {
-  background-color: rgb(253, 255, 218);
+  background-color: #000;
 }
 .messages-leave-active {
-  transition: all 1s;
+  transition: all 500ms ease-in;
 }
 .messages-leave-to {
-  background-color: rgb(255, 231, 231);
-  transform: translateY(-30px);
+  background-color: #ff0000b3;
+  transform: scaleY(0);
+  transform-origin: center top;
 }
 </style>

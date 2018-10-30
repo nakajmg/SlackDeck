@@ -217,6 +217,7 @@ export default {
 </script>
 
 <style lang="scss">
+$color-link: #2ab0ff;
 .Message {
   box-sizing: border-box;
   text-align: left;
@@ -232,8 +233,8 @@ export default {
     width: calc(100% - 2.75em);
   }
   &_UserIcon {
-    min-width: 2.25em;
-    height: 2.25em;
+    min-width: 2.45em;
+    height: 2.45em;
     border-radius: 3px;
     margin-right: 0.5em;
   }
@@ -252,10 +253,10 @@ export default {
     }
     a {
       font-size: 0.9em;
-      color: #0576b9;
+      color: $color-link;
       text-decoration: none;
       &:link {
-        color: #0576b9;
+        color: $color-link;
       }
       &:active,
       &:focus,
@@ -265,7 +266,7 @@ export default {
       }
     }
     [data-user] {
-      color: #0576b9;
+      color: $color-link;
     }
     p {
       margin: 0;
@@ -299,6 +300,7 @@ export default {
     font-size: 0.8em;
     display: flex;
     align-items: center;
+    margin-bottom: 3px;
   }
   &_Icon {
     height: 100%;

@@ -75,9 +75,10 @@ export default {
 .FileGeneral {
   position: relative;
   // border: 1px solid #e8e8e8;
-  border: 1px solid #080808;
+  border: 1px solid #0c0c0c;
   padding: 10px;
   margin-top: 10px;
+  border-radius: 2px;
   &:hover {
     [data-file-menu] {
       opacity: 1;

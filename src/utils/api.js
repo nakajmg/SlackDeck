@@ -46,11 +46,12 @@ export default token => {
         const res = await _get(url, {
           exclude_archived: true,
           exclude_members: true,
+          is_org_shared: true,
         })
         return res.channels
       },
       // https://api.slack.com/methods/channels.history
-      async history({ channelId, count = 20 }) {
+      async history({ channelId, count = 5 }) {
         const url = ENTRY_POINT`/channels.history`
         const res = await _get(url, {
           channel: channelId,

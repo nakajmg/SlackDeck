@@ -168,8 +168,6 @@ export default {
   &_Footer {
     font-size: 0.7em;
     line-height: 1.7;
-    display: flex;
-    align-items: center;
     p {
       margin: 0;
     }
@@ -207,6 +205,10 @@ export default {
       }
     }
   }
+  &_Footer {
+    display: flex;
+    align-items: center;
+  }
   &_Image {
     margin-top: 5px;
     img {
@@ -223,6 +225,7 @@ export default {
     margin-top: 10px;
     padding-left: 10px;
     border-left: 3px solid #a59300;
+    margin-left: -28px;
   }
   &_ServiceInfo {
     display: flex;
