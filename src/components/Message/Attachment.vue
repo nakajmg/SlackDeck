@@ -224,7 +224,7 @@ export default {
   &_Service {
     margin-top: 10px;
     padding-left: 10px;
-    border-left: 3px solid #a59300;
+    border-left: 3px solid #ffe300;
     margin-left: -28px;
   }
   &_ServiceInfo {
